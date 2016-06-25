@@ -22,12 +22,22 @@
                 android:resource="@xml/watch_face" />
             <meta-data
                 android:name="com.google.android.wearable.watchface.preview"
-                android:resource="@drawable/preview_digital" />
+                android:resource="@drawable/icon" />
             <meta-data
                 android:name="com.google.android.wearable.watchface.preview_circular"
-                android:resource="@drawable/preview_digital_circular" />
+                android:resource="@drawable/icon" />
 
+
+            <meta-data
+                android:name="com.google.android.wearable.watchface.companionConfigurationAction"
+                android:value="dragonball_watchface.nikos.tsoglani.dragonballwatchface.Settings" />
+            <!-- wearable configuration activity -->
+            <meta-data
+                android:name="com.google.android.wearable.watchface.wearableConfigurationAction"
+                android:value="com.example.android.wearable.watchface.CONFIG_DIGITAL" />
             <intent-filter>
+
+
                 <action android:name="android.service.wallpaper.WallpaperService" />
 
                 <category android:name="com.google.android.wearable.watchface.category.WATCH_FACE" />
@@ -40,7 +50,14 @@
 
         <activity
             android:name=".Settings"
-            android:label="@string/title_activity_settings"></activity>
+            android:label="@string/title_activity_settings">
+            <intent-filter>
+                <action android:name="com.example.android.wearable.watchface.CONFIG_DIGITAL" />
+
+                <category android:name="com.google.android.wearable.watchface.category.WEARABLE_CONFIGURATION" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>
