@@ -43,7 +43,7 @@ public class Settings extends Activity {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
                 storeSharePref(touchPref, isChecked);
-
+                DragonballFace.isChangingBackgoundByTouch = isChecked;
 
             }
         });
@@ -53,6 +53,8 @@ public class Settings extends Activity {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
                 storeSharePref(HOUR_TYPE, isChecked);
+                DragonballFace.is24HourType = isChecked;
+
 
 
             }
@@ -77,7 +79,7 @@ public class Settings extends Activity {
 
     public void storeSharePref(String text, boolean value) {
         Log.e("isChangingBackgound", "" + value);
-        DragonballFace.isChangingBackgoundByTouch = value;
+
         SharedPreferences.Editor editor = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE).edit();
         editor.putBoolean(text, value);
         editor.commit();
