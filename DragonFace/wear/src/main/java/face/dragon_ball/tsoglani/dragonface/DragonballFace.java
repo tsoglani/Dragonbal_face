@@ -49,7 +49,10 @@ package face.dragon_ball.tsoglani.dragonface;
         import com.github.kleinerhacker.android.gif.GifFactory;
 
         import java.lang.ref.WeakReference;
+        import java.text.ParseException;
+        import java.text.SimpleDateFormat;
         import java.util.ArrayList;
+        import java.util.Date;
         import java.util.TimeZone;
 
         /**
@@ -305,6 +308,9 @@ package face.dragon_ball.tsoglani.dragonface;
                 }
 
                 private void playAnim(Canvas canvas) {
+
+
+//                    updateBrightness(255);
                     if ((myGif==null||myGif.getFrames() == null)||!isLoaded) {
                         return;
                     }
@@ -324,27 +330,43 @@ package face.dragon_ball.tsoglani.dragonface;
                     }
                 }
 
+                private void updateBrightness(int brightness) {
+                    try {
+                        if (brightness < 0)
+                            brightness = 0;
+                        else if (brightness > 255)
+                            brightness = 255;
+                        android.provider.Settings.System.putInt(getContentResolver(), android.provider.Settings.System.SCREEN_BRIGHTNESS_MODE, android.provider.Settings.System.SCREEN_BRIGHTNESS_MODE_MANUAL);
+                        if (!mAmbient)
+                            android.provider.Settings.System.putInt(getContentResolver(), android.provider.Settings.System.SCREEN_BRIGHTNESS, brightness);
+                        else
+                            android.provider.Settings.System.putInt(getContentResolver(), android.provider.Settings.System.SCREEN_BRIGHTNESS, brightness);
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+                }
+
                 private void fadeOut() {
 
                     new AsyncTask<Void, Void, Void>() {
                         @Override
                         protected Void doInBackground(Void... params) {
+                            if(isHourChanged) {
+                                int alpha = 250;
+                                while (alpha > 0 && !isInAmbientMode()) {
+                                    try {
+                                        Thread.sleep(10);
+                                    } catch (InterruptedException e) {
+                                        e.printStackTrace();
+                                    }
+                                    alpha -= 10;
+                                    paint.setAlpha(alpha);
 
-                            int alpha = 250;
-                            while (alpha > 0 && !isInAmbientMode()) {
-                                try {
-                                    Thread.sleep(10);
-                                } catch (InterruptedException e) {
-                                    e.printStackTrace();
                                 }
-                                alpha -= 10;
+                                alpha = 0;
                                 paint.setAlpha(alpha);
 
                             }
-                            alpha = 0;
-                            paint.setAlpha(alpha);
-
-
                             return null;
                         }
 
@@ -353,10 +375,17 @@ package face.dragon_ball.tsoglani.dragonface;
 
                             if (!isInAmbientMode()) {
                                 animationCounter = 0;
-                                changeAnimation();
+
+
+                                // set next animation
+                                if(isHourChanged) {
+//                                    changeAnimation();
+                                    isHourChanged=false;
+                                }
 
 
                             }
+
                             wakeUnlock();
                             if (!isInAmbientMode())
                                 fadeIn();
@@ -743,13 +772,18 @@ package face.dragon_ball.tsoglani.dragonface;
 
                 }
 
-
+boolean isHourChanged=false;
                 private int previousHour = -1, previousMinute = -1;
 
                 @Override
                 public void onDraw(Canvas canvas, Rect bounds) {
                     // Draw the background.
 
+//                    if (isInAmbientMode()){
+//                        updateBrightness(100);
+//                    }else{
+//                        updateBrightness(255);
+//                    }
 //                canvas.drawRect(0, 0, bounds.width(), bounds.height(), mBackgroundPaint);
                     canvas.drawBitmap(backgroundBitmapScaled, 0, 0, null);
 
@@ -765,6 +799,21 @@ package face.dragon_ball.tsoglani.dragonface;
                     if (previousMinute == -1) {
                         previousMinute = tempMinute;
                     }
+
+                    if(!is24HourType){
+
+                        SimpleDateFormat sdf =     new SimpleDateFormat("hh:mm:ss a");
+                        Date date = new Date();
+                        String newTimeFormat=    sdf.format(date);
+
+                        try {
+                            String newHourFormat=newTimeFormat.split(":")[0];
+                            tempHour = Integer.parseInt(newHourFormat);
+                        }catch (Exception e){
+                            e.printStackTrace();
+                        }
+                    }
+
                     if (tempHour < 10) {
                         timeTextOneByOne = 0;
 
@@ -775,9 +824,11 @@ package face.dragon_ball.tsoglani.dragonface;
                     if (previousHour == -1) {
                         previousHour = tempHour;
                     } else if (previousHour != tempHour) {
-                        if (!isChangingBackgoundByTouch)
-                            changeStage();
-                        previousHour = tempHour;
+//                        if (!isChangingBackgoundByTouch)
+//                            changeStage();
+
+                        isHourChanged=true;
+                        changeAnimation();
                     }
 
 
@@ -792,9 +843,7 @@ package face.dragon_ball.tsoglani.dragonface;
 
                     canvas.drawBitmap(num1Bitmap, numberHourX1, numberStartY, null);
 
-                    if(!is24HourType){
-                        tempHour=tempHour%12;
-                    }
+
                     if (tempHour < 10) {
                         timeTextOneByOne = tempHour;
                     } else {
@@ -856,6 +905,8 @@ package face.dragon_ball.tsoglani.dragonface;
 //            else {
 //                animationCounter = 0;
 //            }
+
+                    previousHour = tempHour;
                     previousMinute = tempMinute;
                 }
 

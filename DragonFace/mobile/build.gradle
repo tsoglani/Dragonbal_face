@@ -8,8 +8,8 @@ android {
         applicationId "face.dragon_ball.tsoglani.dragonface"
         minSdkVersion 15
         targetSdkVersion 24
-        versionCode 1
-        versionName "1.0"
+        versionCode 4
+        versionName "1.3"
     }
     buildTypes {
         release {
