@@ -18,7 +18,7 @@ public class Settings extends Activity {
         setContentView(R.layout.activity_settings);
         change_background_manual = (CheckBox) findViewById(R.id.change_background_manual);
         change_hour_type = (CheckBox) findViewById(R.id.hour_type);
-
+        enable_animation= (CheckBox) findViewById(R.id.enable_animation);
         if (DragonballFace.isChangingBackgoundByTouch) {
             change_background_manual.setChecked(true);
         } else {
@@ -30,11 +30,19 @@ public class Settings extends Activity {
         } else {
             change_hour_type.setChecked(false);
         }
+
+
+        if (DragonballFace.isEnableAnimation) {
+            enable_animation.setChecked(true);
+        } else {
+            enable_animation.setChecked(false);
+        }
         addListener();
     }
 
     private CheckBox change_background_manual;
     private CheckBox change_hour_type;
+    private CheckBox enable_animation;
 
     private void addListener() {
 
@@ -60,12 +68,26 @@ public class Settings extends Activity {
             }
         });
 
+        enable_animation.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+                storeSharePref(ENABLE_ANIMATION, isChecked);
+                DragonballFace.isEnableAnimation = isChecked;
+
+
+
+            }
+        });
+
 
     }
 
     protected static final String MY_PREFS_NAME = "dragonballFacePref";
     protected static final String touchPref = "isChangingBackgoundByTouch";
     protected static final String HOUR_TYPE = "Hour_type";
+    protected static final String ENABLE_ANIMATION = "is enable animation";
+
 
     private boolean getSharedPref(String text, boolean defVal) {
         return getSharedPref(this, text, defVal);

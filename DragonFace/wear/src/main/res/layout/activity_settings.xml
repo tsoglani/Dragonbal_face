@@ -18,6 +18,7 @@
         android:text="Change background on click"
         android:id="@+id/change_background_manual"
         android:layout_centerVertical="true"
+        android:textStyle="bold"
         android:layout_centerHorizontal="true"
         android:checked="true" />
     <CheckBox
@@ -26,6 +27,19 @@
         android:text="24 hour type"
         android:id="@+id/hour_type"
         android:checked="true"
+        android:textStyle="bold"
+        android:textColor="@color/WhiteSmoke"
+        android:layout_below="@+id/change_background_manual"
+        android:layout_alignParentEnd="true" />
+
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Enable animation"
+        android:id="@+id/enable_animation"
+        android:checked="true"
+        android:textStyle="bold"
+        android:textColor="@color/WhiteSmoke"
         android:layout_below="@+id/change_background_manual"
         android:layout_alignParentEnd="true" />
 </LinearLayout>
