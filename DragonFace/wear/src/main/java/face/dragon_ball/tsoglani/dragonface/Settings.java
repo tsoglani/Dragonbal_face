@@ -152,13 +152,13 @@ private RadioGroup radio_group;
 
     }
 
-    protected static final String MY_PREFS_NAME = "dragonballFacePref";
-    protected static final String touchPref = "isChangingBackgoundByTouch";
-    protected static final String HOUR_TYPE = "Hour_type";
-    protected static final String ENABLE_ANIMATION = "is enable animation";
-    protected static final String IS_HOUR_ANIMATION_CHANGE = "IS_HOUR_ANIMATION_CHANGE";
-    protected static final String IS_MINUTE_ANIMATION_CHANGE = "IS_MINUTE_ANIMATION_CHANGE";
-    protected static final String DATE = "DATE Pref";
+    protected static final String MY_PREFS_NAME = "dragonballFacePref_dragonball";
+    protected static final String touchPref = "isChangingBackgoundByTouchDragonball";
+    protected static final String HOUR_TYPE = "Hour_type_dragonball";
+    protected static final String ENABLE_ANIMATION = "is enable animation_dragonball";
+    protected static final String IS_HOUR_ANIMATION_CHANGE = "IS_HOUR_ANIMATION_CHANGE_dragonball";
+    protected static final String IS_MINUTE_ANIMATION_CHANGE = "IS_MINUTE_ANIMATION_CHANGE_dragonball";
+    protected static final String DATE = "DATE Pref_dragonball";
 
 
     private boolean getSharedPref(String text, boolean defVal) {
