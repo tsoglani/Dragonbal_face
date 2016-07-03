@@ -44,13 +44,12 @@ import android.view.WindowInsets;
 import android.view.WindowManager;
 
 import com.github.kleinerhacker.android.gif.Gif;
-import com.github.kleinerhacker.android.gif.GifDrawable;
 import com.github.kleinerhacker.android.gif.GifFactory;
 
 import java.lang.ref.WeakReference;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
@@ -59,9 +58,10 @@ import java.util.TimeZone;
  * low-bit ambient mode, the text is drawn without anti-aliasing in ambient mode.
  */
 public class DragonballFace extends CanvasWatchFaceService {
-    protected static boolean isChangingBackgoundByTouch;
-    protected static boolean is24HourType = true;
+    protected static boolean isChangingBackgoundByTouch,IsAnimationChangingPerHour,IsAnimationChangingPerMinute;
+    protected static boolean is24HourType = true, isDateVisible =false;
     protected static boolean isEnableAnimation = true;
+
 
     private static final Typeface NORMAL_TYPEFACE =
             Typeface.create(Typeface.SANS_SERIF, Typeface.NORMAL);
@@ -195,6 +195,9 @@ public class DragonballFace extends CanvasWatchFaceService {
             PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
             wl = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "My Tag");
             isChangingBackgoundByTouch = Settings.getSharedPref(getApplicationContext(), Settings.touchPref, true);
+            IsAnimationChangingPerHour= Settings.getSharedPref(getApplicationContext(), Settings.IS_HOUR_ANIMATION_CHANGE, true);
+            IsAnimationChangingPerMinute= Settings.getSharedPref(getApplicationContext(), Settings.IS_MINUTE_ANIMATION_CHANGE, false);
+            isDateVisible = Settings.getSharedPref(getApplicationContext(), Settings.DATE, false);
             is24HourType = Settings.getSharedPref(getApplicationContext(), Settings.HOUR_TYPE, true);
             isEnableAnimation = Settings.getSharedPref(getApplicationContext(), Settings.ENABLE_ANIMATION, true);
             setWatchFaceStyle(new WatchFaceStyle.Builder(DragonballFace.this)
@@ -334,6 +337,8 @@ public class DragonballFace extends CanvasWatchFaceService {
 //                animationCounter = 0;
                 animationCounter = myGif.getFrames().length - 1;
                 isAnimationActivate = false;
+                if(IsAnimationChangingPerMinute&&isEnableAnimation)
+                    changeAnimation();
 //                changeAnimation();
                 fadeOut();
             }
@@ -787,6 +792,10 @@ public class DragonballFace extends CanvasWatchFaceService {
         @Override
         public void onDraw(Canvas canvas, Rect bounds) {
             // Draw the background.
+            WindowManager window = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
+            Display display = window.getDefaultDisplay();
+            int width = display.getWidth();
+            int height = display.getHeight();
 
 //                    if (isInAmbientMode()){
 //                        updateBrightness(100);
@@ -837,12 +846,27 @@ public class DragonballFace extends CanvasWatchFaceService {
 //                            changeStage();
 
                 isHourChanged = true;
+                if(IsAnimationChangingPerHour&&isEnableAnimation)
                 changeAnimation();
             }
 
 
             canvas.drawBitmap(isInAmbientMode() ? blockBitmap_abc_Scalled : blockScaledBitmap, blockStartX, blockStartY, null);
             canvas.drawBitmap(isInAmbientMode() ? blockBitmap_abc_Scalled : blockScaledBitmap, blockStartX + blockScaledBitmap.getWidth(), blockStartY, null);
+
+
+            if(!isInAmbientMode()&& isDateVisible) {
+                Calendar c = Calendar.getInstance();
+                Paint paint= new Paint();
+                paint.setColor(getResources().getColor(R.color.green));
+
+                String formattedDate =  c.get(Calendar.DAY_OF_MONTH)+"/"+ c.get(Calendar.MONTH)+"/"+ Integer.toString(c.get(Calendar.YEAR)).substring(Integer.toString(c.get(Calendar.YEAR)).length()-2);
+
+                paint.setTextSize(30);
+                paint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));
+
+                canvas.drawText(formattedDate,  5,height/2, paint);
+            }
 
 
             Bitmap num1Bitmap = getTimeBitmap(timeTextOneByOne);
@@ -889,10 +913,6 @@ public class DragonballFace extends CanvasWatchFaceService {
             secontPaint.setFakeBoldText(true);
             secontPaint.setTextSize(num4Bitmap.getWidth() / 2);
 
-            WindowManager window = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
-            Display display = window.getDefaultDisplay();
-            int width = display.getWidth();
-            int height = display.getHeight();
 
 
             float secX = width / 2 + 8 * blockScaledBitmap.getWidth() / 9.0f, secY = blockScaledBitmap.getHeight();
@@ -906,6 +926,7 @@ public class DragonballFace extends CanvasWatchFaceService {
                 if (previousMinute != tempMinute) {
 
                     enableAnimation();
+
                 }
 //                if (timeTolayAnimaton) {
                 playAnim(canvas);

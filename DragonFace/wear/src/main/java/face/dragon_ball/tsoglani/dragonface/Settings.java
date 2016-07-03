@@ -9,6 +9,8 @@ import android.content.SharedPreferences;
 import android.util.Log;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 
 public class Settings extends Activity {
 
@@ -18,7 +20,16 @@ public class Settings extends Activity {
         setContentView(R.layout.activity_settings);
         change_background_manual = (CheckBox) findViewById(R.id.change_background_manual);
         change_hour_type = (CheckBox) findViewById(R.id.hour_type);
-        enable_animation= (CheckBox) findViewById(R.id.enable_animation);
+        date= (CheckBox) findViewById(R.id.date);
+        disable_animation = (RadioButton) findViewById(R.id.disable_animation);
+        radio_group=(RadioGroup)findViewById(R.id.radioGroup);
+        minuteChange= (RadioButton) findViewById(R.id.minuteChange);
+       hourChange= (RadioButton) findViewById(R.id.hourChange);
+
+
+
+
+
         if (DragonballFace.isChangingBackgoundByTouch) {
             change_background_manual.setChecked(true);
         } else {
@@ -33,17 +44,38 @@ public class Settings extends Activity {
 
 
         if (DragonballFace.isEnableAnimation) {
-            enable_animation.setChecked(true);
+            disable_animation.setChecked(true);
         } else {
-            enable_animation.setChecked(false);
+            disable_animation.setChecked(false);
+        }
+
+
+        if (DragonballFace.isDateVisible) {
+            date.setChecked(true);
+        } else {
+            date.setChecked(false);
+        }
+
+
+
+
+        if (DragonballFace.isEnableAnimation&&  DragonballFace.IsAnimationChangingPerHour) {
+            hourChange.setChecked(true);
+        }
+
+        else  if (DragonballFace.isEnableAnimation&&  DragonballFace.IsAnimationChangingPerMinute) {
+            minuteChange.setChecked(true);
+        }
+        else if(!DragonballFace.isEnableAnimation){
+            disable_animation.setChecked(true);
         }
         addListener();
     }
 
     private CheckBox change_background_manual;
-    private CheckBox change_hour_type;
-    private CheckBox enable_animation;
-
+    private CheckBox change_hour_type,date;
+    private RadioButton disable_animation,minuteChange,hourChange;
+private RadioGroup radio_group;
     private void addListener() {
 
         change_background_manual.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -68,17 +100,54 @@ public class Settings extends Activity {
             }
         });
 
-        enable_animation.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        date.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
-                storeSharePref(ENABLE_ANIMATION, isChecked);
-                DragonballFace.isEnableAnimation = isChecked;
+                storeSharePref(DATE, isChecked);
+                DragonballFace.isDateVisible = isChecked;
 
 
 
             }
         });
+
+
+        radio_group.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup radioGroup, int i) {
+                Log.e("IDD",i+"");
+
+                if(hourChange.getId()==i){
+                    storeSharePref(IS_HOUR_ANIMATION_CHANGE, true);
+                    DragonballFace.IsAnimationChangingPerHour = true;
+                    storeSharePref(ENABLE_ANIMATION, true);
+                    DragonballFace.isEnableAnimation = true;
+                    storeSharePref(IS_MINUTE_ANIMATION_CHANGE, false);
+                    DragonballFace.IsAnimationChangingPerMinute = false;
+                }else  if(minuteChange.getId()==i){
+
+                    storeSharePref(IS_MINUTE_ANIMATION_CHANGE, true);
+                    DragonballFace.IsAnimationChangingPerMinute = true;
+                    storeSharePref(ENABLE_ANIMATION, true);
+                    DragonballFace.isEnableAnimation = true;
+                    storeSharePref(IS_HOUR_ANIMATION_CHANGE, false);
+                    DragonballFace.IsAnimationChangingPerHour = false;
+
+
+
+                }else  if(disable_animation.getId()==i){
+                    storeSharePref(ENABLE_ANIMATION, false);
+                    DragonballFace.isEnableAnimation = false;
+                    storeSharePref(IS_MINUTE_ANIMATION_CHANGE, false);
+                    DragonballFace.IsAnimationChangingPerMinute = false;
+                    storeSharePref(IS_HOUR_ANIMATION_CHANGE, false);
+                    DragonballFace.IsAnimationChangingPerHour = false;
+                }
+
+            }
+        });
+
 
 
     }
@@ -87,6 +156,9 @@ public class Settings extends Activity {
     protected static final String touchPref = "isChangingBackgoundByTouch";
     protected static final String HOUR_TYPE = "Hour_type";
     protected static final String ENABLE_ANIMATION = "is enable animation";
+    protected static final String IS_HOUR_ANIMATION_CHANGE = "IS_HOUR_ANIMATION_CHANGE";
+    protected static final String IS_MINUTE_ANIMATION_CHANGE = "IS_MINUTE_ANIMATION_CHANGE";
+    protected static final String DATE = "DATE Pref";
 
 
     private boolean getSharedPref(String text, boolean defVal) {

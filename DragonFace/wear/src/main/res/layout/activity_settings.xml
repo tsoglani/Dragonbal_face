@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -7,11 +9,78 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    android:orientation="vertical"
-    android:gravity="center|left"
+   android:layout_gravity="center"
     android:background="@drawable/bg1_abc"
+
     tools:context=".Settings">
 
+    <ScrollView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center">
+<LinearLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@color/transparent_black_percent_40"
+
+    android:orientation="horizontal">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:background="@color/transparent_black_percent_70"
+        android:gravity="center"
+        android:text="Animation"/>
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginLeft="20dp">
+        <RadioGroup
+            android:layout_width="wrap_content"
+            android:id="@+id/radioGroup"
+            android:layout_height="wrap_content">
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Per hour"
+                android:id="@+id/hourChange"
+                android:checked="true"
+                android:textStyle="bold"
+                android:textColor="@color/WhiteSmoke"
+                android:layout_below="@+id/change_background_manual"
+                android:layout_alignParentEnd="true" />
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Per minute"
+                android:id="@+id/minuteChange"
+                android:checked="false"
+                android:textStyle="bold"
+                android:textColor="@color/WhiteSmoke"
+                android:layout_below="@+id/change_background_manual"
+                android:layout_alignParentEnd="true" />
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Disable"
+                android:id="@+id/disable_animation"
+                android:checked="false"
+                android:textStyle="bold"
+                android:textColor="@color/WhiteSmoke"
+                android:layout_below="@+id/change_background_manual"
+                android:layout_alignParentEnd="true" />
+        </RadioGroup>
+
+    </RelativeLayout>
+
+
+</LinearLayout>
     <CheckBox
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -31,15 +100,17 @@
         android:textColor="@color/WhiteSmoke"
         android:layout_below="@+id/change_background_manual"
         android:layout_alignParentEnd="true" />
-
     <CheckBox
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Enable animation"
-        android:id="@+id/enable_animation"
-        android:checked="true"
+        android:text="Date"
+        android:id="@+id/date"
+        android:checked="false"
         android:textStyle="bold"
         android:textColor="@color/WhiteSmoke"
         android:layout_below="@+id/change_background_manual"
         android:layout_alignParentEnd="true" />
-</LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
+</FrameLayout>
