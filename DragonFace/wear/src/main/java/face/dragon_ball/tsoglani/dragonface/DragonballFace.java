@@ -862,7 +862,7 @@ public class DragonballFace extends CanvasWatchFaceService {
 
                 String formattedDate =  c.get(Calendar.DAY_OF_MONTH)+"/"+ c.get(Calendar.MONTH)+"/"+ Integer.toString(c.get(Calendar.YEAR)).substring(Integer.toString(c.get(Calendar.YEAR)).length()-2);
 
-                paint.setTextSize(30);
+                paint.setTextSize(23);
                 paint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));
 
                 canvas.drawText(formattedDate,  5,height/2, paint);
