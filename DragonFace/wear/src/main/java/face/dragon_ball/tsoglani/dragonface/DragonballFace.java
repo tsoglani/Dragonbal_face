@@ -1,18 +1,4 @@
-/*
- * Copyright (C) 2014 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+
 
 package face.dragon_ball.tsoglani.dragonface;
 
@@ -27,6 +13,7 @@ import android.graphics.Canvas;
 import android.graphics.Movie;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.graphics.RectF;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
@@ -53,15 +40,13 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
-/**
- * Digital watch face with seconds. In ambient mode, the seconds aren't displayed. On devices with
- * low-bit ambient mode, the text is drawn without anti-aliasing in ambient mode.
- */
 public class DragonballFace extends CanvasWatchFaceService {
-    protected static boolean isChangingBackgoundByTouch,IsAnimationChangingPerHour,IsAnimationChangingPerMinute;
-    protected static boolean is24HourType = true, isDateVisible =false;
-    protected static boolean isEnableAnimation = true;
+    protected static boolean isChangingBackgoundByTouch;
+    protected static boolean isChangingAnimationByTouch;
+    protected static boolean is24HourType = true;
+    protected static boolean isDateVisible = false;
 
+    protected static boolean isEnableAnimation = true;
 
     private static final Typeface NORMAL_TYPEFACE =
             Typeface.create(Typeface.SANS_SERIF, Typeface.NORMAL);
@@ -83,7 +68,7 @@ public class DragonballFace extends CanvasWatchFaceService {
     }
 
     private static class EngineHandler extends Handler {
-        private final WeakReference<DragonballFace.Engine> mWeakReference;
+        private final WeakReference<Engine> mWeakReference;
 
         public EngineHandler(DragonballFace.Engine reference) {
             mWeakReference = new WeakReference<>(reference);
@@ -157,7 +142,7 @@ public class DragonballFace extends CanvasWatchFaceService {
         private Bitmap seven_bitmap;
         private Bitmap eight_bitmap;
         private Bitmap nine_bitmap;
-        private Bitmap seconds_bitmap, seconds_bitmap_abc;
+        //        private Bitmap seconds_bitmap, seconds_bitmap_abc;
         private Bitmap scaledZero_bitmap;
         private Bitmap scaledOne_bitmap;
         private Bitmap scaledTwo_bitmap;
@@ -170,7 +155,11 @@ public class DragonballFace extends CanvasWatchFaceService {
         private Bitmap scaledNine_bitmap;
         private Bitmap blockScaledBitmap;
         private Bitmap blockBitmap, blockBitmap_abc, blockBitmap_abc_Scalled;
-        private Bitmap secondsBlockBitmapScalled, secondsBlockBitmapScalled_abc;
+//        private Bitmap secondsBlockBitmapScalled, secondsBlockBitmapScalled_abc;
+
+
+//        private Bitmap date_bitmap, date_amb_bitmap, dateBitmap_abc_Scalled,dateBitmap_Scalled;
+
         float blockStartX = 20;
         float blockStartY = 30;
         float numberStartY = 30;
@@ -194,11 +183,11 @@ public class DragonballFace extends CanvasWatchFaceService {
 
             PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
             wl = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "My Tag");
-            isChangingBackgoundByTouch = Settings.getSharedPref(getApplicationContext(), Settings.touchPref, true);
-            IsAnimationChangingPerHour= Settings.getSharedPref(getApplicationContext(), Settings.IS_HOUR_ANIMATION_CHANGE, true);
-            IsAnimationChangingPerMinute= Settings.getSharedPref(getApplicationContext(), Settings.IS_MINUTE_ANIMATION_CHANGE, false);
-            isDateVisible = Settings.getSharedPref(getApplicationContext(), Settings.DATE, false);
+            isChangingBackgoundByTouch = Settings.getSharedPref(getApplicationContext(), Settings.CHANGE_BACKGROUND_ON_CLICK, true);
+            isChangingAnimationByTouch= Settings.getSharedPref(getApplicationContext(), Settings.CHANGE_ANIMATION_ON_CLICK, false);
             is24HourType = Settings.getSharedPref(getApplicationContext(), Settings.HOUR_TYPE, true);
+
+            isDateVisible = Settings.getSharedPref(getApplicationContext(), Settings.DATE_TYPE, false);
             isEnableAnimation = Settings.getSharedPref(getApplicationContext(), Settings.ENABLE_ANIMATION, true);
             setWatchFaceStyle(new WatchFaceStyle.Builder(DragonballFace.this)
                     .setCardPeekMode(WatchFaceStyle.PEEK_MODE_VARIABLE)
@@ -255,6 +244,7 @@ public class DragonballFace extends CanvasWatchFaceService {
             animationList.add(R.raw.thirteen);
             animationList.add(R.raw.fourteen);
             animationList.add(R.raw.fifteen);
+
             animationList.add(R.raw.sixteen);
             animationList.add(R.raw.seventeen);
             animationList.add(R.raw.eighteen);
@@ -267,6 +257,33 @@ public class DragonballFace extends CanvasWatchFaceService {
 //            animationList.add(R.raw.twentyfive);
 //            animationList.add(R.raw.twentysix);
 //            animationList.add(R.raw.twentyseven);
+//            animationList.add(R.raw.twentyeight);
+//            animationList.add(R.raw.twentynine);
+////            animationList.add(R.raw.thirty);
+//
+//
+//
+//
+//            animationList.add(R.raw.thirtyone);
+//            animationList.add(R.raw.thirtytwo);
+//            animationList.add(R.raw.thirtythree);
+//            animationList.add(R.raw.thirtyfour);
+//            animationList.add(R.raw.thirtyfive);
+//            animationList.add(R.raw.thirtysix);
+//            animationList.add(R.raw.thirtyseven);
+//            animationList.add(R.raw.thirtyeight);
+//            animationList.add(R.raw.thirtynine);
+//            animationList.add(R.raw.forty);
+//            animationList.add(R.raw.fourtyone);
+//            animationList.add(R.raw.fourtytwo);
+//            animationList.add(R.raw.fourtythree);
+//            animationList.add(R.raw.fourtyfour);
+//            animationList.add(R.raw.fourtyfive);
+//            animationList.add(R.raw.fourtysix);
+//            animationList.add(R.raw.fourtyseven);
+//            animationList.add(R.raw.fourtyeight);
+//            animationList.add(R.raw.fourtynine);
+//            animationList.add(R.raw.fifty);
 
         }
 
@@ -319,7 +336,7 @@ public class DragonballFace extends CanvasWatchFaceService {
                     animationCounter = 0;
                 }
                 if(isAnimationActivate)
-                isAnimationActivate=false;
+                    isAnimationActivate=false;
                 return;
             }
 //                    updateBrightness(255);
@@ -336,9 +353,7 @@ public class DragonballFace extends CanvasWatchFaceService {
             if (animationCounter >= myGif.getFrames().length) {
 //                animationCounter = 0;
                 animationCounter = myGif.getFrames().length - 1;
-                isAnimationActivate = false;
-                if(IsAnimationChangingPerMinute&&isEnableAnimation)
-                    changeAnimation();
+
 //                changeAnimation();
                 fadeOut();
             }
@@ -433,7 +448,7 @@ public class DragonballFace extends CanvasWatchFaceService {
                     paint.setAlpha(alpha);
                     animationCounter = 0;
 
-
+                    isAnimationActivate = false;
                 }
             }.start();
         }
@@ -474,19 +489,46 @@ public class DragonballFace extends CanvasWatchFaceService {
             backgroundList_abc.removeAll(backgroundList_abc);
 
             backgroundList.add(R.drawable.bg1);
-
             backgroundList.add(R.drawable.bg2);
+//            backgroundList.add(R.drawable.bg3);
+//            backgroundList.add(R.drawable.bg4);
+//            backgroundList.add(R.drawable.bg5);
             backgroundList.add(R.drawable.bg6);
-//            backgroundList.add(R.drawable.bg7);
+            backgroundList.add(R.drawable.bg7);
             backgroundList.add(R.drawable.bg8);
             backgroundList.add(R.drawable.bg9);
-            backgroundList_abc.add(R.drawable.bg1_abc);
+//            backgroundList.add(R.drawable.bg10);
+//            backgroundList.add(R.drawable.bg11);
+//            backgroundList.add(R.drawable.bg12);
+//            backgroundList.add(R.drawable.bg13);
 
+//            backgroundList.add(R.drawable.bg7);
+//            backgroundList.add(R.drawable.bg8);
+//            backgroundList.add(R.drawable.bg9);
+//            backgroundList.add(R.drawable.bg10);
+//            backgroundList.add(R.drawable.bg11);
+
+
+            backgroundList_abc.add(R.drawable.bg1_abc);
             backgroundList_abc.add(R.drawable.bg2_abc);
+//            backgroundList_abc.add(R.drawable.bg3_abc);
+//            backgroundList_abc.add(R.drawable.bg4_abc);
+//            backgroundList_abc.add(R.drawable.bg5_abc);
             backgroundList_abc.add(R.drawable.bg6_abc);
-//            backgroundList_abc.add(R.drawable.bg7_abc);
+
+
+            backgroundList_abc.add(R.drawable.bg7_abc);
             backgroundList_abc.add(R.drawable.bg8_abc);
             backgroundList_abc.add(R.drawable.bg9_abc);
+//            backgroundList_abc.add(R.drawable.bg10_abc);
+//            backgroundList_abc.add(R.drawable.bg11_abc);
+//            backgroundList_abc.add(R.drawable.bg12_abc);
+//            backgroundList_abc.add(R.drawable.bg13_abc);
+//            backgroundList_abc.add(R.drawable.bg7_abc);
+//            backgroundList_abc.add(R.drawable.bg8_abc);
+//            backgroundList_abc.add(R.drawable.bg9_abc);
+//            backgroundList_abc.add(R.drawable.bg10_abc);
+//            backgroundList_abc.add(R.drawable.bg11_abc);
 
         }
 
@@ -510,7 +552,8 @@ public class DragonballFace extends CanvasWatchFaceService {
             eight_bitmap = ((BitmapDrawable) resources.getDrawable(R.drawable.number8, null)).getBitmap();
             nine_bitmap = ((BitmapDrawable) resources.getDrawable(R.drawable.number9, null)).getBitmap();
             blockBitmap = ((BitmapDrawable) resources.getDrawable(R.drawable.brick, null)).getBitmap();
-            seconds_bitmap = ((BitmapDrawable) resources.getDrawable(R.drawable.sec, null)).getBitmap();
+
+//            seconds_bitmap = ((BitmapDrawable) resources.getDrawable(R.drawable.sec, null)).getBitmap();
 
 
             zero_amb_bitmap = ((BitmapDrawable) resources.getDrawable(R.drawable.number0_abc, null)).getBitmap();
@@ -524,7 +567,9 @@ public class DragonballFace extends CanvasWatchFaceService {
             eight_amb_bitmap = ((BitmapDrawable) resources.getDrawable(R.drawable.number8_abc, null)).getBitmap();
             nine_amb_bitmap = ((BitmapDrawable) resources.getDrawable(R.drawable.number9_abc, null)).getBitmap();
             blockBitmap_abc = ((BitmapDrawable) resources.getDrawable(R.drawable.brick_abc, null)).getBitmap();
-            seconds_bitmap_abc = ((BitmapDrawable) resources.getDrawable(R.drawable.seconds_abc, null)).getBitmap();
+//            seconds_bitmap_abc = ((BitmapDrawable) resources.getDrawable(R.drawable.sec_abc, null)).getBitmap();
+//            date_amb_bitmap = ((BitmapDrawable) resources.getDrawable(R.drawable.date_abc, null)).getBitmap();
+
 
 //            zero_amb_bitmap = ((BitmapDrawable) resources.getDrawable(R.drawable.amb_number0, null)).getBitmap();
 //            one_amb_bitmap = ((BitmapDrawable) resources.getDrawable(R.drawable.amb_number1, null)).getBitmap();
@@ -561,7 +606,9 @@ public class DragonballFace extends CanvasWatchFaceService {
             scaledEight_amb_bitmap = getScaledBitmap(eight_amb_bitmap);
             scaledNine_amb_bitmap = getScaledBitmap(nine_amb_bitmap);
             blockBitmap_abc_Scalled = getScaledBitmap(blockBitmap_abc);
-            secondsBlockBitmapScalled_abc = getScaledBitmap(seconds_bitmap_abc);
+//            dateBitmap_Scalled = getScaledBitmap(date_bitmap);
+//            dateBitmap_abc_Scalled = getScaledBitmap(date_amb_bitmap);
+//            secondsBlockBitmapScalled_abc = getScaledBitmap(seconds_bitmap_abc);
 
 
             scaledZero_bitmap = getScaledBitmap(zero_bitmap);
@@ -575,7 +622,7 @@ public class DragonballFace extends CanvasWatchFaceService {
             scaledEight_bitmap = getScaledBitmap(eight_bitmap);
             scaledNine_bitmap = getScaledBitmap(nine_bitmap);
             blockScaledBitmap = getScaledBitmap(blockBitmap);
-            secondsBlockBitmapScalled = getScaledBitmap(seconds_bitmap);
+//            secondsBlockBitmapScalled = getScaledBitmap(seconds_bitmap);
         }
 
         private void initValues() {
@@ -585,8 +632,9 @@ public class DragonballFace extends CanvasWatchFaceService {
             int height = display.getHeight();
             blockStartY = 50f * mainScaleX;
             blockStartX = (width / 2) - blockScaledBitmap.getWidth();
-            numberStartY = blockStartY + blockScaledBitmap.getHeight() / 3;
+            Bitmap num1Bitmap = getTimeBitmap(0);
 
+            numberStartY = blockStartY + blockScaledBitmap.getHeight() /2-num1Bitmap.getHeight()/2;
         }
 
 //        @Override
@@ -741,8 +789,12 @@ public class DragonballFace extends CanvasWatchFaceService {
                 if (touchTime < maxTouchTime) {
                     if (isChangingBackgoundByTouch) {
                         changeStage();
-                    } else {
+                    }
+                    else   if(isChangingAnimationByTouch) {
 //                        enableAnimation();
+                        changeAnimation();
+                        Log.e("changeAnimation", "" + touchTime);
+
                     }
                 }
                 Log.e("TAP_TYPE_TAP", "" + touchTime);
@@ -792,6 +844,8 @@ public class DragonballFace extends CanvasWatchFaceService {
         @Override
         public void onDraw(Canvas canvas, Rect bounds) {
             // Draw the background.
+            Paint paint= new Paint();
+
             WindowManager window = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
             Display display = window.getDefaultDisplay();
             int width = display.getWidth();
@@ -817,11 +871,13 @@ public class DragonballFace extends CanvasWatchFaceService {
             if (previousMinute == -1) {
                 previousMinute = tempMinute;
             }
-
+            String hourExtra=null;
+            Date date = new Date();
             if (!is24HourType) {
-
+                hourExtra=(tempHour<12)?"AM":"PM";
                 SimpleDateFormat sdf = new SimpleDateFormat("hh:mm:ss a");
-                Date date = new Date();
+
+
                 String newTimeFormat = sdf.format(date);
 
                 try {
@@ -846,32 +902,62 @@ public class DragonballFace extends CanvasWatchFaceService {
 //                            changeStage();
 
                 isHourChanged = true;
-                if(IsAnimationChangingPerHour&&isEnableAnimation)
                 changeAnimation();
             }
 
 
-            canvas.drawBitmap(isInAmbientMode() ? blockBitmap_abc_Scalled : blockScaledBitmap, blockStartX, blockStartY, null);
-            canvas.drawBitmap(isInAmbientMode() ? blockBitmap_abc_Scalled : blockScaledBitmap, blockStartX + blockScaledBitmap.getWidth(), blockStartY, null);
+            canvas.drawBitmap(isInAmbientMode() ? blockBitmap_abc_Scalled : blockScaledBitmap, width/2-blockScaledBitmap.getWidth()-10, blockStartY, null);
+            canvas.drawBitmap(isInAmbientMode() ? blockBitmap_abc_Scalled : blockScaledBitmap, width/2+10, blockStartY, null);
 
+            if(!isInAmbientMode()) {// draw energy
+//                Paint transPaint= new Paint();
+//                transPaint.setColor(getResources().getColor(R.color.transparent_black_percent_75));
+//                canvas.drawRect(width/2-blockScaledBitmap.getWidth()-10, blockStartY,width/2-blockScaledBitmap.getWidth()-10+ blockScaledBitmap.getWidth(), blockStartY+blockScaledBitmap.getHeight(), transPaint);
+//                canvas.drawRect(width/2+10, blockStartY,width/2+10+ blockScaledBitmap.getWidth(), blockStartY+blockScaledBitmap.getHeight(), transPaint);
+//
+//
+//                Paint redPaint= new Paint();
+//                redPaint.setColor(getResources().getColor(R.color.dark_red));
+//                Paint greenPaint= new Paint();
+//                greenPaint.setColor(getResources().getColor(R.color.ForestGreen));
+//                float hourX=width / 2 - blockScaledBitmap.getWidth() - 10;
+//
+//                float hourTotalEndWidth=width / 2 - blockScaledBitmap.getWidth() - 10+ blockScaledBitmap.getWidth();
+//                float hourDistanse=hourTotalEndWidth-hourX;
 
-            if(!isInAmbientMode()&& isDateVisible) {
-                Calendar c = Calendar.getInstance();
-                Paint paint= new Paint();
-                paint.setColor(getResources().getColor(R.color.green));
+                int usedTempHour=tempHour;
+                if(!is24HourType&&hourExtra.equals("PM")){
+                    usedTempHour+=12;
+                }
+//                float distanseGreen=hourDistanse*(1-usedTempHour/23.0f);
+//                canvas.drawRect(hourX,  blockStartY+5*blockScaledBitmap.getHeight()/6,hourX+distanseGreen, blockStartY+blockScaledBitmap.getHeight(), greenPaint);
+//                canvas.drawRect(hourX+distanseGreen,  blockStartY+5*blockScaledBitmap.getHeight()/6, hourTotalEndWidth, blockStartY+blockScaledBitmap.getHeight(), redPaint);
+//
+//
+//                float minX=width/2+10;
+//
+//                float minTotalEndWidth=width/2+10+ blockScaledBitmap.getWidth();
+//                float minDistanse=minTotalEndWidth-minX;
+//
+//                float distanseMinGreen=minDistanse*(1-tempMinute/59.0f);
+//
+//                canvas.drawRect(minX,  blockStartY+5*blockScaledBitmap.getHeight()/6,minX+distanseMinGreen, blockStartY+blockScaledBitmap.getHeight(), greenPaint);
+//                canvas.drawRect(minX+distanseMinGreen,  blockStartY+5*blockScaledBitmap.getHeight()/6, minTotalEndWidth, blockStartY+blockScaledBitmap.getHeight(), redPaint);
 
-                String formattedDate =  c.get(Calendar.DAY_OF_MONTH)+"/"+ c.get(Calendar.MONTH)+"/"+ Integer.toString(c.get(Calendar.YEAR)).substring(Integer.toString(c.get(Calendar.YEAR)).length()-2);
-
-                paint.setTextSize(23);
-                paint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));
-
-                canvas.drawText(formattedDate,  5,height/2, paint);
             }
+            if (!isInAmbientMode()) {
+                if (previousMinute != tempMinute) {
 
+                    enableAnimation();
+                }
+//                if (timeTolayAnimaton) {
+                playAnim(canvas);
+//                }
+            }
 
             Bitmap num1Bitmap = getTimeBitmap(timeTextOneByOne);
 
-            numberHourX1 = blockStartX + blockScaledBitmap.getWidth() / 10;
+            numberHourX1 = blockStartX + blockScaledBitmap.getWidth() / 10-10;
 
 
             canvas.drawBitmap(num1Bitmap, numberHourX1, numberStartY, null);
@@ -883,11 +969,15 @@ public class DragonballFace extends CanvasWatchFaceService {
                 timeTextOneByOne = tempHour - ((tempHour / 10) * 10);
             }
 
+
+
             numberHourX2 = numberHourX1 + num1Bitmap.getWidth();
             Bitmap num2Bitmap = getTimeBitmap(timeTextOneByOne);
 
 
             canvas.drawBitmap(num2Bitmap, numberHourX2, numberStartY, null);
+
+
 
             if (tempMinute < 10) {
                 timeTextOneByOne = 0;
@@ -896,7 +986,7 @@ public class DragonballFace extends CanvasWatchFaceService {
             }
             Bitmap num3Bitmap = getTimeBitmap(timeTextOneByOne);
 
-            numberMinuteX1 = blockStartX + blockScaledBitmap.getWidth() + 5 + blockScaledBitmap.getWidth() / 10;
+            numberMinuteX1 = blockStartX + blockScaledBitmap.getWidth() + 5 + blockScaledBitmap.getWidth() / 10+10;
 
             canvas.drawBitmap(num3Bitmap, numberMinuteX1, numberStartY, null);
             if (tempMinute < 10) {
@@ -909,29 +999,55 @@ public class DragonballFace extends CanvasWatchFaceService {
             numberMinuteX2 = numberMinuteX1 + num3Bitmap.getWidth();
             canvas.drawBitmap(num4Bitmap, numberMinuteX2, numberStartY, null);
 
-            Paint secontPaint = new Paint();
-            secontPaint.setFakeBoldText(true);
-            secontPaint.setTextSize(num4Bitmap.getWidth() / 2);
+            if(!isInAmbientMode()&& isDateVisible) {
+                Calendar c = Calendar.getInstance();
+                Paint paint2= new Paint();
+                paint2.setColor(getResources().getColor(R.color.black));
+
+                String formattedDate =  c.get(Calendar.DAY_OF_MONTH)+"/"+ c.get(Calendar.MONTH)+"/"+ Integer.toString(c.get(Calendar.YEAR)).substring(Integer.toString(c.get(Calendar.YEAR)).length()-2);
+
+                paint2.setTextSize( 20);
+                paint2.setTypeface(Typeface.create(Typeface.DEFAULT_BOLD, Typeface.BOLD_ITALIC));
+
+                canvas.drawText(formattedDate, (int)(numberHourX1+num1Bitmap.getWidth()/3),num1Bitmap.getHeight()+numberStartY+25, paint2);
+            }
+
+            if(!is24HourType){
+                paint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.ITALIC));
+                paint.setTextSize(20);
+                canvas.drawText(hourExtra, (int)(width/2+3*blockScaledBitmap.getWidth()/7.0),num1Bitmap.getHeight()+numberStartY+25, paint);
+
+            }
 
 
 
-            float secX = width / 2 + 8 * blockScaledBitmap.getWidth() / 9.0f, secY = blockScaledBitmap.getHeight();
-            canvas.drawBitmap(isInAmbientMode() ? secondsBlockBitmapScalled_abc : secondsBlockBitmapScalled, secX, secY, null);
+//            canvas.drawBitmap(isInAmbientMode() ? secondsBlockBitmapScalled_abc : secondsBlockBitmapScalled, secX, secY, null);
             if (!isInAmbientMode()) {
-                canvas.drawText(mTime.second >= 10 ? Integer.toString(mTime.second) : "0" + Integer.toString(mTime.second), secX + secondsBlockBitmapScalled.getWidth() / 5, 2 * secondsBlockBitmapScalled.getHeight() / 3 + secY, secontPaint);
+                Paint secontPaint = new Paint();
+                secontPaint.setFakeBoldText(true);
+                secontPaint.setColor(getResources().getColor(R.color.dark_red));
+                float secX = width / 2 -30, secY = blockScaledBitmap.getHeight()+blockStartY+33;
+                Paint backgroundSecPaint=new Paint();
+                backgroundSecPaint.setColor(getResources().getColor(R.color.transparent_white_percent_50));
+                secontPaint.setTextSize(50);
+                canvas.drawOval(new RectF(secX-10 ,10+secY,secX+70,secY-50), backgroundSecPaint);
+
+                secontPaint.setTypeface(Typeface.create(Typeface.DEFAULT_BOLD, Typeface.BOLD));
+
+
+
+
+
+//                Paint backgroundSecPaint=new Paint();
+//                backgroundSecPaint.setColor(getResources().getColor(R.color.transparent_black_percent_50));
+//                canvas.drawRect( secX-5 ,5+secY,secX+45,secY-28, backgroundSecPaint);
+
+                canvas.drawText(mTime.second >= 10 ? Integer.toString(mTime.second) : "0" + Integer.toString(mTime.second), secX ,secY, secontPaint);
+
             }
 //            canvas.drawRect(cardBounds, mainPaint);
 
-            if (!isInAmbientMode()) {
-                if (previousMinute != tempMinute) {
 
-                    enableAnimation();
-
-                }
-//                if (timeTolayAnimaton) {
-                playAnim(canvas);
-//                }
-            }
 //            else {
 //                animationCounter = 0;
 //            }
