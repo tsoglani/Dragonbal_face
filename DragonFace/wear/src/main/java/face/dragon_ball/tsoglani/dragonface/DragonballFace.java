@@ -288,7 +288,7 @@ public class DragonballFace extends CanvasWatchFaceService {
         }
 
         Gif myGif;
-        boolean isLoaded = false;
+        boolean isLoaded = true;
 
         private void loadAnimation(final int id) {
             isLoaded = false;
@@ -456,7 +456,7 @@ public class DragonballFace extends CanvasWatchFaceService {
         private int animationNumber = 0;
 
         private void changeAnimation() {
-            if (isAnimationActivate) {
+            if (isAnimationActivate||!isLoaded) {
                 return;
             }
             animationNumber++;
