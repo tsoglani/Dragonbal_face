@@ -840,6 +840,7 @@ public class DragonballFace extends CanvasWatchFaceService {
 
         boolean isHourChanged = false;
         private int previousHour = -1, previousMinute = -1;
+        boolean previousIs24HourType=is24HourType;
 
         @Override
         public void onDraw(Canvas canvas, Rect bounds) {
@@ -887,6 +888,11 @@ public class DragonballFace extends CanvasWatchFaceService {
                     e.printStackTrace();
                 }
             }
+
+            if(previousIs24HourType!=is24HourType){
+                previousHour=tempHour;
+            }
+
 
             if (tempHour < 10) {
                 timeTextOneByOne = 0;
@@ -1051,7 +1057,7 @@ public class DragonballFace extends CanvasWatchFaceService {
 //            else {
 //                animationCounter = 0;
 //            }
-
+            previousIs24HourType=is24HourType;
             previousHour = tempHour;
             previousMinute = tempMinute;
         }
