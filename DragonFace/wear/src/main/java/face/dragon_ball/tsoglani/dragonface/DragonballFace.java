@@ -215,15 +215,20 @@ public class DragonballFace extends CanvasWatchFaceService {
 
 
         private void wakeLock() {
-
-            wl.acquire();
-
+try {
+    wl.acquire();
+}catch (Exception e){
+    e.printStackTrace();
+}
 
         }
 
         private void wakeUnlock() {
+            try{
             wl.release();
-
+        }catch (Exception e){
+            e.printStackTrace();
+        }
 
         }
 
