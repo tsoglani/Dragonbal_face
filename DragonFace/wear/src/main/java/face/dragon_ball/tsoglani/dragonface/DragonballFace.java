@@ -10,6 +10,7 @@ import android.content.IntentFilter;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Movie;
 import android.graphics.Paint;
 import android.graphics.Rect;
@@ -17,6 +18,7 @@ import android.graphics.RectF;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
+import android.os.BatteryManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -41,7 +43,7 @@ import java.util.Date;
 import java.util.TimeZone;
 
 public class DragonballFace extends CanvasWatchFaceService {
-    protected static boolean isChangingBackgoundByTouch;
+    protected static boolean isChangingBackgoundByTouch,isBatteryVisible;
     protected static boolean isChangingAnimationByTouch;
     protected static boolean is24HourType = true;
     protected static boolean isDateVisible = false;
@@ -131,6 +133,7 @@ public class DragonballFace extends CanvasWatchFaceService {
         ArrayList<Integer> backgroundList = new ArrayList<>();
         ArrayList<Integer> backgroundList_abc = new ArrayList<>();
 
+        private Bitmap batteryBitmap,batteryScaledBitmap,batteryBitmap_abc,batteryScaledBitmap_abc;
 
         private Bitmap zero_bitmap;
         private Bitmap one_bitmap;
@@ -186,6 +189,7 @@ public class DragonballFace extends CanvasWatchFaceService {
             isChangingBackgoundByTouch = Settings.getSharedPref(getApplicationContext(), Settings.CHANGE_BACKGROUND_ON_CLICK, true);
             isChangingAnimationByTouch= Settings.getSharedPref(getApplicationContext(), Settings.CHANGE_ANIMATION_ON_CLICK, false);
             is24HourType = Settings.getSharedPref(getApplicationContext(), Settings.HOUR_TYPE, true);
+            isBatteryVisible=Settings.getSharedPref(getApplicationContext(),Settings.ENABLE_BATTERY, false);
 
             isDateVisible = Settings.getSharedPref(getApplicationContext(), Settings.DATE_TYPE, false);
             isEnableAnimation = Settings.getSharedPref(getApplicationContext(), Settings.ENABLE_ANIMATION, true);
@@ -558,6 +562,9 @@ try {
             nine_bitmap = ((BitmapDrawable) resources.getDrawable(R.drawable.number9, null)).getBitmap();
             blockBitmap = ((BitmapDrawable) resources.getDrawable(R.drawable.brick, null)).getBitmap();
 
+            batteryBitmap = ((BitmapDrawable) resources.getDrawable(R.drawable.battery_2, null)).getBitmap();
+            batteryBitmap_abc = ((BitmapDrawable) resources.getDrawable(R.drawable.battery_2_abc, null)).getBitmap();
+
 //            seconds_bitmap = ((BitmapDrawable) resources.getDrawable(R.drawable.sec, null)).getBitmap();
 
 
@@ -610,6 +617,8 @@ try {
             scaledSeven_amb_bitmap = getScaledBitmap(seven_amb_bitmap);
             scaledEight_amb_bitmap = getScaledBitmap(eight_amb_bitmap);
             scaledNine_amb_bitmap = getScaledBitmap(nine_amb_bitmap);
+            batteryScaledBitmap = getScaledBitmap(batteryBitmap);
+            batteryScaledBitmap_abc = getScaledBitmap(batteryBitmap_abc);
             blockBitmap_abc_Scalled = getScaledBitmap(blockBitmap_abc);
 //            dateBitmap_Scalled = getScaledBitmap(date_bitmap);
 //            dateBitmap_abc_Scalled = getScaledBitmap(date_amb_bitmap);
@@ -964,6 +973,12 @@ try {
 //                if (timeTolayAnimaton) {
                 playAnim(canvas);
 //                }
+            }else{
+
+                if(isEnableAnimation) {
+                    final BitmapDrawable myDrawable = new BitmapDrawable(getResources(), myGif.getFrames()[animationCounter].getImage());
+                    canvas.drawBitmap(getAmbienceGifImage(getScaledBitmap(myDrawable.getBitmap())), 0, 0, paint);
+                }
             }
 
             Bitmap num1Bitmap = getTimeBitmap(timeTextOneByOne);
@@ -1010,24 +1025,45 @@ try {
             numberMinuteX2 = numberMinuteX1 + num3Bitmap.getWidth();
             canvas.drawBitmap(num4Bitmap, numberMinuteX2, numberStartY, null);
 
-            if(!isInAmbientMode()&& isDateVisible) {
+            if( isDateVisible) {
                 Calendar c = Calendar.getInstance();
                 Paint paint2= new Paint();
-                paint2.setColor(getResources().getColor(R.color.black));
+                paint2.setColor(isInAmbientMode()?getResources().getColor(R.color.DarkGray):getResources().getColor(R.color.Orange));
 
                 String formattedDate =  c.get(Calendar.DAY_OF_MONTH)+"/"+ c.get(Calendar.MONTH)+"/"+ Integer.toString(c.get(Calendar.YEAR)).substring(Integer.toString(c.get(Calendar.YEAR)).length()-2);
 
-                paint2.setTextSize( 20);
+                paint2.setTextSize( 23);
                 paint2.setTypeface(Typeface.create(Typeface.DEFAULT_BOLD, Typeface.BOLD_ITALIC));
 
-                canvas.drawText(formattedDate, (int)(numberHourX1+num1Bitmap.getWidth()/3),num1Bitmap.getHeight()+numberStartY+25, paint2);
+                Paint p=new Paint();
+                p.setColor(getResources().getColor(R.color.transparent_black_percent_40));
+
+                canvas.drawRect( (int)(numberHourX1/2-5),blockScaledBitmap.getHeight()+blockStartY+10,numberHourX1/2+num1Bitmap.getWidth()/10+(formattedDate.length()-2)*convertToPx(9)+5,blockScaledBitmap.getHeight()+blockStartY+40,p);
+                canvas.drawText(formattedDate, (int)(numberHourX1/2),blockScaledBitmap.getHeight()+blockStartY+33, paint2);
             }
 
             if(!is24HourType){
-                paint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.ITALIC));
-                paint.setTextSize(20);
+                paint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));
+                paint.setTextSize(23);
+                paint.setColor(isInAmbientMode()?getResources().getColor(R.color.white):getResources().getColor(R.color.gray_dark));
+
                 canvas.drawText(hourExtra, (int)(width/2+3*blockScaledBitmap.getWidth()/7.0),num1Bitmap.getHeight()+numberStartY+25, paint);
 
+            }
+
+
+            if(isBatteryVisible){
+                Paint bp= new Paint();
+                bp.setTextSize(17);
+                bp.setTypeface(Typeface.create(Typeface.DEFAULT_BOLD, Typeface.BOLD_ITALIC));
+                canvas.drawBitmap((isInAmbientMode())?batteryScaledBitmap_abc:batteryScaledBitmap,width-numberHourX1/2-batteryScaledBitmap_abc.getWidth(),blockStartY+blockScaledBitmap.getHeight(),null);
+                IntentFilter iFilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
+                Intent batteryStatus = getApplicationContext().registerReceiver(null, iFilter);
+                if(isInAmbientMode()){
+                    bp.setColor(getResources().getColor(R.color.MilkWhite));
+                }
+
+                canvas.drawText(Integer.toString( batteryStatus.getIntExtra(BatteryManager.EXTRA_LEVEL, -1))+"%",width-numberHourX1/2-batteryScaledBitmap_abc.getWidth()+batteryScaledBitmap.getWidth()/4,(blockStartY+blockScaledBitmap.getHeight()+2*batteryScaledBitmap.getHeight()/3.0f),bp);
             }
 
 
@@ -1066,6 +1102,51 @@ try {
             previousHour = tempHour;
             previousMinute = tempMinute;
         }
+
+        public int convertToPx(int dp) {
+            // Get the screen's density scale
+            final float scale = getResources().getDisplayMetrics().density;
+            // Convert the dps to pixels, based on density scale
+            return (int) (dp * scale + 0.5f);
+        }
+
+        private Bitmap getAmbienceGifImage(Bitmap src) {
+            // constant factors
+            final double GS_RED = 0.299;
+            final double GS_GREEN = 0.587;
+            final double GS_BLUE = 0.114;
+
+            // create output bitmap
+            Bitmap bmOut = Bitmap.createBitmap(src.getWidth(), src.getHeight(), src.getConfig());
+            // pixel information
+            int A, R, G, B;
+            int pixel;
+
+            // get image size
+            int width = src.getWidth();
+            int height = src.getHeight();
+
+            // scan through every single pixel
+            for(int x = 0; x < width; ++x) {
+                for(int y = 0; y < height; ++y) {
+                    // get one pixel color
+                    pixel = src.getPixel(x, y);
+                    // retrieve color of all channels
+                    A = Color.alpha(pixel);
+                    R = Color.red(pixel);
+                    G = Color.green(pixel);
+                    B = Color.blue(pixel);
+                    // take conversion up to one single value
+                    R = G = B = (int)(GS_RED * R + GS_GREEN * G + GS_BLUE * B);
+                    // set new pixel color to output bitmap
+                    bmOut.setPixel(x, y, Color.argb(A, R, G, B));
+                }
+            }
+
+            // return final image
+            return bmOut;
+        }
+
 
         public Bitmap getTimeBitmap(int number) {
             switch (number) {

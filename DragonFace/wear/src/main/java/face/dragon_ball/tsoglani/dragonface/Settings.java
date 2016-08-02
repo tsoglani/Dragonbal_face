@@ -22,6 +22,7 @@ public class Settings extends Activity {
         change_animation_manual = (RadioButton) findViewById(R.id.change_animation);
         radio_group=(RadioGroup)findViewById(R.id.radio_group);
         do_nothing = (RadioButton) findViewById(R.id.no_change);
+        battery_enable= (CheckBox) findViewById(R.id.enable_battery);
 
         change_hour_type = (CheckBox) findViewById(R.id.hour_type);
         date_visible= (CheckBox) findViewById(R.id.date_visible);
@@ -50,8 +51,22 @@ public class Settings extends Activity {
             date_visible.setChecked(false);
         }
 
+        if (DragonballFace.isBatteryVisible) {
+            battery_enable.setChecked(true);
+        } else {
+            battery_enable.setChecked(false);
+        }
+        battery_enable.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+                storeSharePref(ENABLE_BATTERY, isChecked);
+                DragonballFace.isBatteryVisible = isChecked;
 
 
+
+            }
+        });
 
         if (DragonballFace.isEnableAnimation) {
             enable_animation.setChecked(true);
@@ -64,7 +79,7 @@ public class Settings extends Activity {
     private RadioButton change_background_manual,change_animation_manual,do_nothing;
     private RadioGroup radio_group;
     private CheckBox change_hour_type,date_visible;
-    private CheckBox enable_animation;
+    private CheckBox enable_animation,battery_enable;
 
     private void addListener() {
 
@@ -176,13 +191,13 @@ public class Settings extends Activity {
 
     }
 
-    protected static final String MY_PREFS_NAME = "MortalKombat_watch_FacePref";
-    protected static final String CHANGE_BACKGROUND_ON_CLICK = "isChangingBackgoundByTouch_MortalKombat";
-    protected static final String CHANGE_ANIMATION_ON_CLICK = "isChangingAnimationByTouch_MortalKombat";
+    protected static final String MY_PREFS_NAME = "DragonballFace_watch_FacePref";
+    protected static final String CHANGE_BACKGROUND_ON_CLICK = "isChangingBackgoundByTouch_DragonballFace";
+    protected static final String CHANGE_ANIMATION_ON_CLICK = "isChangingAnimationByTouch_DragonballFace";
 
-    protected static final String HOUR_TYPE = "Hour_type_MortalKombat";
-    protected static final String DATE_TYPE = "Date_type_MortalKombat";
-    protected static final String ENABLE_ANIMATION = "is enable animation_MortalKombat";
+    protected static final String HOUR_TYPE = "Hour_type_DragonballFace";
+    protected static final String DATE_TYPE = "Date_type_DragonballFace";
+    protected static final String ENABLE_ANIMATION = "is enable animation_DragonballFace",ENABLE_BATTERY="Enable_Battery_DragonballFace";
 
 
     private boolean getSharedPref(String text, boolean defVal) {
