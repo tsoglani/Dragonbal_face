@@ -1060,7 +1060,7 @@ try {
                 IntentFilter iFilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
                 Intent batteryStatus = getApplicationContext().registerReceiver(null, iFilter);
                 if(isInAmbientMode()){
-                    bp.setColor(getResources().getColor(R.color.MilkWhite));
+                    bp.setColor(getResources().getColor(R.color.gray_dark));
                 }
 
                 canvas.drawText(Integer.toString( batteryStatus.getIntExtra(BatteryManager.EXTRA_LEVEL, -1))+"%",width-numberHourX1/2-batteryScaledBitmap_abc.getWidth()+batteryScaledBitmap.getWidth()/4,(blockStartY+blockScaledBitmap.getHeight()+2*batteryScaledBitmap.getHeight()/3.0f),bp);
