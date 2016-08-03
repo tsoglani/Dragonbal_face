@@ -389,22 +389,22 @@ try {
             new AsyncTask<Void, Void, Void>() {
                 @Override
                 protected Void doInBackground(Void... params) {
-                    if (isHourChanged) {
-                        int alpha = 250;
-                        while (alpha > 0 && !isInAmbientMode()) {
-                            try {
-                                Thread.sleep(10);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
-                            alpha -= 10;
-                            paint.setAlpha(alpha);
-
-                        }
-                        alpha = 0;
-                        paint.setAlpha(alpha);
-
-                    }
+//                    if (isHourChanged) {
+//                        int alpha = 250;
+//                        while (alpha > 0 && !isInAmbientMode()) {
+//                            try {
+//                                Thread.sleep(10);
+//                            } catch (InterruptedException e) {
+//                                e.printStackTrace();
+//                            }
+//                            alpha -= 10;
+//                            paint.setAlpha(alpha);
+//
+//                        }
+//                        alpha = 0;
+//                        paint.setAlpha(alpha);
+//
+//                    }
                     return null;
                 }
 
@@ -425,8 +425,9 @@ try {
                     }
 
                     wakeUnlock();
-                    if (!isInAmbientMode())
-                        fadeIn();
+                    if (!isInAmbientMode()){
+                        isAnimationActivate=false;
+                        fadeIn();}
 
                     super.onPostExecute(aVoid);
                 }
@@ -442,22 +443,21 @@ try {
             new Thread() {
                 @Override
                 public void run() {
-                    int alpha = 0;
-                    while (alpha < 250 && !isInAmbientMode()) {
-                        try {
-                            sleep(10);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                        alpha += 10;
-                        paint.setAlpha(alpha);
-
-                    }
-                    alpha = 255;
-                    paint.setAlpha(alpha);
+//                    int alpha = 0;
+////                    while (alpha < 250 && !isInAmbientMode()) {
+////                        try {
+////                            sleep(10);
+////                        } catch (InterruptedException e) {
+////                            e.printStackTrace();
+////                        }
+////                        alpha += 10;
+////                        paint.setAlpha(alpha);
+////
+////                    }
+//                    alpha = 255;
+//                    paint.setAlpha(alpha);
                     animationCounter = 0;
 
-                    isAnimationActivate = false;
                 }
             }.start();
         }
