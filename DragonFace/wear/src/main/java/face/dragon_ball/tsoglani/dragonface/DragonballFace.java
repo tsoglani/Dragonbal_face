@@ -1248,8 +1248,8 @@ try {
                 Paint p=new Paint();
                 p.setColor(getResources().getColor(R.color.transparent_black_percent_40));
 
-                canvas.drawRect( (int)(numberHourX1/2-5),blockScaledBitmap.getHeight()+blockStartY+10,numberHourX1/2+num1Bitmap.getWidth()/10+(formattedDate.length()-2)*convertToPx(9)+5,blockScaledBitmap.getHeight()+blockStartY+40,p);
-                canvas.drawText(formattedDate, (int)(numberHourX1/2),blockScaledBitmap.getHeight()+blockStartY+33, paint2);
+                canvas.drawRect( (int)(numberHourX1/3-5),blockScaledBitmap.getHeight()+blockStartY,numberHourX1/3+num1Bitmap.getWidth()/10+(formattedDate.length()-2)*convertToPx(9)+5,blockScaledBitmap.getHeight()+blockStartY+30,p);
+                canvas.drawText(formattedDate, (int)(numberHourX1/3),blockScaledBitmap.getHeight()+blockStartY+23, paint2);
             }
 
             if(!is24HourType){
@@ -1266,14 +1266,14 @@ try {
                 Paint bp= new Paint();
                 bp.setTextSize(17);
                 bp.setTypeface(Typeface.create(Typeface.DEFAULT_BOLD, Typeface.BOLD_ITALIC));
-                canvas.drawBitmap((!shouldTimerBeRunning())?batteryScaledBitmap_abc:batteryScaledBitmap,width-numberHourX1/2-batteryScaledBitmap_abc.getWidth(),blockStartY+blockScaledBitmap.getHeight(),null);
+                canvas.drawBitmap((!shouldTimerBeRunning())?batteryScaledBitmap_abc:batteryScaledBitmap,width-numberHourX1/3-batteryScaledBitmap_abc.getWidth(),blockStartY+blockScaledBitmap.getHeight(),null);
                 IntentFilter iFilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
                 Intent batteryStatus = getApplicationContext().registerReceiver(null, iFilter);
                 if(!shouldTimerBeRunning()){
                     bp.setColor(getResources().getColor(R.color.gray_dark));
                 }
 
-                canvas.drawText(Integer.toString( batteryStatus.getIntExtra(BatteryManager.EXTRA_LEVEL, -1))+"%",width-numberHourX1/2-batteryScaledBitmap_abc.getWidth()+batteryScaledBitmap.getWidth()/4,(blockStartY+blockScaledBitmap.getHeight()+2*batteryScaledBitmap.getHeight()/3.0f),bp);
+                canvas.drawText(Integer.toString( batteryStatus.getIntExtra(BatteryManager.EXTRA_LEVEL, -1))+"%",width-numberHourX1/3-batteryScaledBitmap_abc.getWidth()+batteryScaledBitmap.getWidth()/4,(blockStartY+blockScaledBitmap.getHeight()+2*batteryScaledBitmap.getHeight()/3.0f),bp);
             }
 
 
