@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Movie;
@@ -47,6 +48,15 @@ public class DragonballFace extends CanvasWatchFaceService {
     protected static boolean isChangingAnimationByTouch;
     protected static boolean is24HourType = true;
     protected static boolean isDateVisible = false;
+    Gif myGif;
+    float mainScaleX, mainScaleY;
+    Bitmap originalBitmap;
+    Bitmap resizedBitmap;
+    ArrayList<Bitmap> listOfAnimationImages= new ArrayList<Bitmap>();
+    ArrayList<String> listOfAnimationImagesLocation= new ArrayList<String>();
+    Bitmap []animationBitmaps;
+    int animationCounter = 0,animationNumber=0;
+    int previousAnimationCounter=animationCounter,previousAnimationNumber;
 
     protected static boolean isEnableAnimation = true;
 
@@ -175,15 +185,14 @@ public class DragonballFace extends CanvasWatchFaceService {
          * disable anti-aliasing in ambient mode.
          */
         boolean mLowBitAmbient;
-        private Bitmap backgroundBitmap, backgroundBitmapScaled;
-        float mainScaleX, mainScaleY;
+        private Bitmap backgroundBitmap, backgroundBitmapScaled,backgroundBitmap_abc,backgroundBitmapScaled_abc;
         private ArrayList<Integer> animationList = new ArrayList<Integer>();
         PowerManager.WakeLock wl;
 
         @Override
         public void onCreate(SurfaceHolder holder) {
             super.onCreate(holder);
-
+            initAnimImageList();
             PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
             wl = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "My Tag");
             isChangingBackgoundByTouch = Settings.getSharedPref(getApplicationContext(), Settings.CHANGE_BACKGROUND_ON_CLICK, true);
@@ -296,8 +305,10 @@ try {
 
         }
 
-        Gif myGif;
         boolean isLoaded = true;
+
+
+
 
         private void loadAnimation(final int id) {
             isLoaded = false;
@@ -305,10 +316,16 @@ try {
                 @Override
                 public void run() {
                     try {
-
+                        if (animationNumber  >= animationList.size()) {
+                            animationNumber = 0;
+                        }
                         myGif = GifFactory.decodeResource(getResources(), id);
 
                         myGif = Gif.createScaledGif(myGif, backgroundBitmap.getWidth(), backgroundBitmap.getHeight(), true);
+                        animationBitmaps= new Bitmap[myGif.getFrames().length];
+                        for (int i=0;i<animationBitmaps.length;i++){
+                            animationBitmaps[i]=myGif.getFrames()[i].getImage();
+                        }
                         isLoaded = true;
                     } catch (Exception | Error e) {
                         e.printStackTrace();
@@ -327,47 +344,238 @@ try {
 
         }
 
-        int animationCounter = 0;
+
         boolean isAnimationActivate = false;
 
         private void enableAnimation() {
-            if (isAnimationActivate || isInAmbientMode() || !isLoaded) {
+            if (isAnimationActivate || !shouldTimerBeRunning() || !isLoaded) {
                 return;
             }
             wakeLock();
             isAnimationActivate = true;
         }
 
-        private void playAnim(Canvas canvas) {
+        private void initAnimImageList(){
+
+
+//
+//
+
+            listOfAnimationImages.add( createTrimmedBitmap(getScaledBitmap3(BitmapFactory.decodeResource(getResources(), R.drawable.one))));
+            listOfAnimationImages.add( createTrimmedBitmap(getScaledBitmap3(BitmapFactory.decodeResource(getResources(), R.drawable.two))));
+            listOfAnimationImages.add( createTrimmedBitmap(getScaledBitmap3(BitmapFactory.decodeResource(getResources(), R.drawable.three))));
+            listOfAnimationImages.add( createTrimmedBitmap(getScaledBitmap3(BitmapFactory.decodeResource(getResources(), R.drawable.four))));
+            listOfAnimationImages.add( createTrimmedBitmap(getScaledBitmap3(BitmapFactory.decodeResource(getResources(), R.drawable.five))));
+            listOfAnimationImages.add( createTrimmedBitmap(getScaledBitmap3(BitmapFactory.decodeResource(getResources(), R.drawable.six))));
+            listOfAnimationImages.add( createTrimmedBitmap(getScaledBitmap3(BitmapFactory.decodeResource(getResources(), R.drawable.seven))));
+            listOfAnimationImages.add( createTrimmedBitmap(getScaledBitmap3(BitmapFactory.decodeResource(getResources(), R.drawable.eight))));
+            listOfAnimationImages.add( createTrimmedBitmap(getScaledBitmap3(BitmapFactory.decodeResource(getResources(), R.drawable.nine))));
+            listOfAnimationImages.add( createTrimmedBitmap(getScaledBitmap3(BitmapFactory.decodeResource(getResources(), R.drawable.ten))));
+            listOfAnimationImages.add( createTrimmedBitmap(getScaledBitmap3(BitmapFactory.decodeResource(getResources(), R.drawable.eleven))));
+            listOfAnimationImages.add( createTrimmedBitmap(getScaledBitmap3(BitmapFactory.decodeResource(getResources(), R.drawable.twelve))));
+            listOfAnimationImages.add( createTrimmedBitmap(getScaledBitmap3(BitmapFactory.decodeResource(getResources(), R.drawable.thirteen))));
+            listOfAnimationImages.add( createTrimmedBitmap(getScaledBitmap3(BitmapFactory.decodeResource(getResources(), R.drawable.fourteen))));
+            listOfAnimationImages.add( createTrimmedBitmap(getScaledBitmap3(BitmapFactory.decodeResource(getResources(), R.drawable.fifteen))));
+            listOfAnimationImages.add( createTrimmedBitmap(getScaledBitmap3(BitmapFactory.decodeResource(getResources(), R.drawable.sixteen))));
+            listOfAnimationImages.add( createTrimmedBitmap(getScaledBitmap3(BitmapFactory.decodeResource(getResources(), R.drawable.seventeen))));
+            listOfAnimationImages.add( createTrimmedBitmap(getScaledBitmap3(BitmapFactory.decodeResource(getResources(), R.drawable.eighteen))));
+            listOfAnimationImages.add( createTrimmedBitmap(getScaledBitmap3(BitmapFactory.decodeResource(getResources(), R.drawable.nineteen))));
+            listOfAnimationImages.add( createTrimmedBitmap(getScaledBitmap3(BitmapFactory.decodeResource(getResources(), R.drawable.twenty))));
+            listOfAnimationImages.add( createTrimmedBitmap(getScaledBitmap3(BitmapFactory.decodeResource(getResources(), R.drawable.twentyone))));
+
+
+
+
+        }
+        Bitmap getScaledBitmap3(Bitmap bitmap) {
+
+            WindowManager window = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
+            Display display = window.getDefaultDisplay();
+            int width = display.getWidth();
+            int height = display.getHeight();
+
+            return Bitmap.createScaledBitmap(bitmap,width,height, true);
+        }
+
+        private void playAnim(final Canvas canvas) {
 
             if (!isEnableAnimation) {
                 if (animationCounter != 0) {
                     animationCounter = 0;
                 }
-                if(isAnimationActivate)
-                    isAnimationActivate=false;
+                if (isAnimationActivate)
+                    isAnimationActivate = false;
+                previousAnimationCounter=animationCounter;
                 return;
             }
 //                    updateBrightness(255);
-            if ((myGif == null || myGif.getFrames() == null) || !isLoaded) {
+            if ((animationBitmaps == null) || !isLoaded) {
                 return;
             }
-            final BitmapDrawable myDrawable = new BitmapDrawable(getResources(), myGif.getFrames()[animationCounter].getImage());
-            canvas.drawBitmap(getScaledBitmap(myDrawable.getBitmap()), 0, 0, paint);
 
             if (isAnimationActivate) {
                 animationCounter++;
 //                paint = null;
             }
-            if (animationCounter >= myGif.getFrames().length) {
+            if (animationCounter >=animationBitmaps.length) {
 //                animationCounter = 0;
-                animationCounter = myGif.getFrames().length - 1;
+                animationCounter = animationBitmaps.length - 1;
 
 //                changeAnimation();
                 fadeOut();
+
+
+            }
+//            new Thread(){
+//                @Override
+//                public void run() {
+//                    if(previousAnimationCounter!=animationCounter||originalBitmap==null||resizedBitmap==null) {
+//                        originalBitmap = new BitmapDrawable(getResources(), myGif.getFrames()[animationCounter].getImage());
+//                        resizedBitmap=getScaledBitmap(originalBitmap.getBitmap());
+//                        Log.e("eeeeeeeeeeeeeee","goes here");
+//                        previousAnimationCounter=animationCounter;
+//                    }
+//                }
+//            }.start();
+
+            if((animationCounter!=0)) {
+                if(previousAnimationNumber!=animationNumber||previousAnimationCounter!=animationCounter||originalBitmap ==null||resizedBitmap ==null) {
+
+                    new Thread(){
+                        @Override
+                        public void run() {
+
+
+//
+
+
+//        ByteArrayOutputStream out = new ByteArrayOutputStream();
+//      Bitmap b=  Bitmap.createScaledBitmap(MyWatchFace.originalBitmap, newWidth, newHeight, true);
+//        b.compress(Bitmap.CompressFormat.WEBP,10,out);
+
+                            originalBitmap = animationBitmaps[animationCounter];
+                            resizedBitmap =getScaledBitmap(originalBitmap);
+
+
+
+
+                        }
+                    }.start();
+
+//            startService(new Intent(getApplicationContext(),MyService.class));
+                }
+                drawAnim(canvas,false);
+            }else{
+                if((animationCounter==0))
+
+                    drawAnim(canvas,true);
+            }
+
+//            canvas.drawRect(animationLeft, animationTop,animationLeft+resizedBitmap.getWidth(),animationTop+resizedBitmap.getHeight(),paint);
+
+
+        }
+
+        private void drawAnim(Canvas canvas,boolean playFirstImage){
+            previousAnimationCounter=animationCounter;
+            previousAnimationNumber=animationNumber;
+            if(!playFirstImage&&resizedBitmap ==null) {
+                canvas.drawBitmap(listOfAnimationImages.get(animationNumber),Integer.parseInt(listOfAnimationImagesLocation.get(animationNumber).split(",,")[0]), Integer.parseInt(listOfAnimationImagesLocation.get(animationNumber).split(",,")[1]), null);
+
+                return;
+            }
+            if(animationCounter!=0){
+                animationTop=0;
+                animationLeft=0;
+            }
+
+
+            if(playFirstImage){
+//                if(previousAnimationNumber!=animationNumber||MyWatchFace.previousAnimationCounter!=MyWatchFace.animationCounter||MyWatchFace.originalBitmap ==null||MyWatchFace.resizedBitmap ==null) {
+////                    MyWatchFace.resizedBitmap =listOfAnimationImages.get(animationNumber);
+//                Log.e("play ", "true   ");
+//                }
+                canvas.drawBitmap(listOfAnimationImages.get(animationNumber),Integer.parseInt(listOfAnimationImagesLocation.get(animationNumber).split(",,")[0]), Integer.parseInt(listOfAnimationImagesLocation.get(animationNumber).split(",,")[1]), null);
+
+            }
+            else {
+//                Log.e("play ", "false   ");
+                canvas.drawBitmap(resizedBitmap, animationLeft, animationTop, null);
+
             }
         }
 
+        int animationTop,animationLeft;
+        public  Bitmap createTrimmedBitmap(Bitmap original) {
+
+
+            float sampleClopSize=50;
+            float trimSizeX=original.getWidth()/sampleClopSize;
+            float trimSizeY=original.getHeight()/sampleClopSize;
+
+
+//            int[] pix = new int[bmp.getHeight()*bmp.getWidth()];
+//            bmp.getPixels(pix, 0, bmp.getWidth(), 0, 0, bmp.getWidth(), bmp.getHeight());
+//int [][]pixels= new int[bmp.getWidth()][bmp.getHeight()];
+//            for(int i =0; i<bmp.getWidth();i++) {
+//               for (int j =0; j<bmp.getHeight();j++){
+//                   pixels[i][j]=pix[i*bmp.getHeight()+j];
+//                   Log.e("", "pixel"+i*bmp.getHeight()+j+"b   - " +pixels[i][j]);
+//               }
+//
+//            }
+            Bitmap bmp=  Bitmap.createScaledBitmap(original, (int)sampleClopSize, (int)sampleClopSize, true);
+
+            int minX = bmp.getWidth();
+            int minY = bmp.getHeight();
+            int maxX = -1;
+            int maxY = -1;
+
+
+
+//
+//            int[] pix = new int[bmp.getHeight()*bmp.getWidth()];
+//            bmp.getPixels(pix, 0, bmp.getWidth(), 0, 0, bmp.getWidth(), bmp.getHeight());
+//int [][]pixels= new int[bmp.getWidth()][bmp.getHeight()];
+//            for(int i =0; i<bmp.getWidth();i++) {
+//               for (int j =0; j<bmp.getHeight();j++){
+//                   pixels[i][j]=pix[i*bmp.getHeight()+j];
+//                   Log.e("", "pixel"+i*bmp.getHeight()+j+"b   - " +pixels[i][j]);
+//               }
+//
+//            }
+
+
+            for(int y = 0; y < bmp.getHeight(); y++)
+            {
+                for(int x = 0; x < bmp.getWidth(); x++)
+                {
+                    int alpha = (bmp.getPixel(x, y) >> 24) & 255;
+                    if(alpha > 0)   // pixel is not 100% transparent
+                    {
+                        if(x < minX)
+                            minX = x;
+                        if(x > maxX)
+                            maxX = x;
+                        if(y < minY)
+                            minY = y;
+                        if(y > maxY)
+                            maxY = y;
+                    }
+                }
+            }
+            if((maxX < minX) || (maxY < minY))
+                return null; // Bitmap is entirely transparent
+            animationTop=(int)(minY*trimSizeY);
+            animationLeft=(int)(minX*trimSizeX);
+            listOfAnimationImagesLocation.add(animationLeft+",,"+animationTop);
+            // crop bitmap to non-transparent area and return:
+            return Bitmap.createBitmap(original, (int)(minX*trimSizeX), (int)(minY*trimSizeY), (int)((maxX - minX+ 1)*trimSizeX ), (int)((maxY - minY+ 1) *trimSizeY));
+
+
+
+
+        }
         private void updateBrightness(int brightness) {
             try {
                 if (brightness < 0)
@@ -411,7 +619,7 @@ try {
                 @Override
                 protected void onPostExecute(Void aVoid) {
 
-                    if (!isInAmbientMode()) {
+                    if (shouldTimerBeRunning()) {
                         animationCounter = 0;
 
 
@@ -425,7 +633,7 @@ try {
                     }
 
                     wakeUnlock();
-                    if (!isInAmbientMode()){
+                    if (shouldTimerBeRunning()){
                         isAnimationActivate=false;
                         fadeIn();}
 
@@ -462,7 +670,6 @@ try {
             }.start();
         }
 
-        private int animationNumber = 0;
 
         private void changeAnimation() {
             if (isAnimationActivate||!isLoaded) {
@@ -542,12 +749,10 @@ try {
         }
 
         private void initBitmaps() {
-            if (isInAmbientMode()) {
-                backgroundBitmap = ((BitmapDrawable) getDrawable(backgroundList_abc.get(0))).getBitmap();
+            backgroundBitmap_abc = ((BitmapDrawable) getDrawable(backgroundList_abc.get(0))).getBitmap();
 
-            } else {
-                backgroundBitmap = ((BitmapDrawable) getDrawable(backgroundList.get(0))).getBitmap();
-            }
+            backgroundBitmap = ((BitmapDrawable) getDrawable(backgroundList.get(0))).getBitmap();
+
             Resources resources = getResources();
 
             zero_bitmap = ((BitmapDrawable) resources.getDrawable(R.drawable.number0, null)).getBitmap();
@@ -605,8 +810,8 @@ try {
             mainScaleX = ((float) width) / ((float) backgroundBitmap.getWidth());
             mainScaleY = ((float) height) / ((float) backgroundBitmap.getHeight());
 
-
             backgroundBitmapScaled = Bitmap.createScaledBitmap(backgroundBitmap, (int) (((float) backgroundBitmap.getWidth()) * mainScaleX), (int) (((float) backgroundBitmap.getHeight()) * mainScaleY), true);
+            backgroundBitmapScaled_abc= getScaledBitmap(backgroundBitmap_abc);
             scaledZero_amb_bitmap = getScaledBitmap(zero_amb_bitmap);
             scaledOne_amb_bitmap = getScaledBitmap(one_amb_bitmap);
             scaledTwo_amb_bitmap = getScaledBitmap(two_amb_bitmap);
@@ -827,14 +1032,13 @@ try {
                 backgroundImageCounter = 0;
             }
 
-            if (!isInAmbientMode()) {
+            if (shouldTimerBeRunning()) {
                 setNonAmbienceBackground(backgroundImageCounter);
             } else {
                 setAmbienceBackground(backgroundImageCounter);
             }
 
         }
-
 
         private void setNonAmbienceBackground(int id) {
 
@@ -872,7 +1076,7 @@ try {
 //                        updateBrightness(255);
 //                    }
 //                canvas.drawRect(0, 0, bounds.width(), bounds.height(), mBackgroundPaint);
-            canvas.drawBitmap(backgroundBitmapScaled, 0, 0, null);
+            canvas.drawBitmap(shouldTimerBeRunning()?backgroundBitmapScaled:backgroundBitmapScaled_abc, 0, 0, null);
 
 
             // Draw H:MM in ambient mode or H:MM:SS in interactive mode.
@@ -926,10 +1130,10 @@ try {
             }
 
 
-            canvas.drawBitmap(isInAmbientMode() ? blockBitmap_abc_Scalled : blockScaledBitmap, width/2-blockScaledBitmap.getWidth()-10, blockStartY, null);
-            canvas.drawBitmap(isInAmbientMode() ? blockBitmap_abc_Scalled : blockScaledBitmap, width/2+10, blockStartY, null);
+            canvas.drawBitmap(!shouldTimerBeRunning() ? blockBitmap_abc_Scalled : blockScaledBitmap, width/2-blockScaledBitmap.getWidth()-10, blockStartY, null);
+            canvas.drawBitmap(!shouldTimerBeRunning() ? blockBitmap_abc_Scalled : blockScaledBitmap, width/2+10, blockStartY, null);
 
-            if(!isInAmbientMode()) {// draw energy
+            if(shouldTimerBeRunning()) {// draw energy
 //                Paint transPaint= new Paint();
 //                transPaint.setColor(getResources().getColor(R.color.transparent_black_percent_75));
 //                canvas.drawRect(width/2-blockScaledBitmap.getWidth()-10, blockStartY,width/2-blockScaledBitmap.getWidth()-10+ blockScaledBitmap.getWidth(), blockStartY+blockScaledBitmap.getHeight(), transPaint);
@@ -965,19 +1169,25 @@ try {
 //                canvas.drawRect(minX+distanseMinGreen,  blockStartY+5*blockScaledBitmap.getHeight()/6, minTotalEndWidth, blockStartY+blockScaledBitmap.getHeight(), redPaint);
 
             }
-            if (!isInAmbientMode()) {
+            if (shouldTimerBeRunning()) {
                 if (previousMinute != tempMinute) {
 
                     enableAnimation();
                 }
 //                if (timeTolayAnimaton) {
-                playAnim(canvas);
-//                }
-            }else{
+                if (isEnableAnimation) {
+                    playAnim(canvas);
+                }
 
-                if(isEnableAnimation) {
-                    final BitmapDrawable myDrawable = new BitmapDrawable(getResources(), myGif.getFrames()[animationCounter].getImage());
-                    canvas.drawBitmap(getAmbienceGifImage(getScaledBitmap(myDrawable.getBitmap())), 0, 0, paint);
+//                }
+            } else {
+                if (isEnableAnimation&&myGif!=null) {
+
+//                    final BitmapDrawable myDrawable = new BitmapDrawable(getResources(), myGif.getFrames()[animationCounter].getImage());
+//                    canvas.drawBitmap(getAmbienceGifImage(getScaledBitmap(myDrawable.getBitmap())), 0, 0, paint);
+
+                    canvas.drawBitmap(getAmbienceGifImage(listOfAnimationImages.get(animationNumber)),Integer.parseInt(listOfAnimationImagesLocation.get(animationNumber).split(",,")[0]), Integer.parseInt(listOfAnimationImagesLocation.get(animationNumber).split(",,")[1]), null);
+
                 }
             }
 
@@ -1028,7 +1238,7 @@ try {
             if( isDateVisible) {
                 Calendar c = Calendar.getInstance();
                 Paint paint2= new Paint();
-                paint2.setColor(isInAmbientMode()?getResources().getColor(R.color.DarkGray):getResources().getColor(R.color.Orange));
+                paint2.setColor(!shouldTimerBeRunning()?getResources().getColor(R.color.DarkGray):getResources().getColor(R.color.Orange));
 
                 String formattedDate =  c.get(Calendar.DAY_OF_MONTH)+"/"+ c.get(Calendar.MONTH)+"/"+ Integer.toString(c.get(Calendar.YEAR)).substring(Integer.toString(c.get(Calendar.YEAR)).length()-2);
 
@@ -1045,7 +1255,7 @@ try {
             if(!is24HourType){
                 paint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));
                 paint.setTextSize(23);
-                paint.setColor(isInAmbientMode()?getResources().getColor(R.color.white):getResources().getColor(R.color.gray_dark));
+                paint.setColor(!shouldTimerBeRunning()?getResources().getColor(R.color.white):getResources().getColor(R.color.gray_dark));
 
                 canvas.drawText(hourExtra, (int)(width/2+3*blockScaledBitmap.getWidth()/7.0),num1Bitmap.getHeight()+numberStartY+25, paint);
 
@@ -1056,10 +1266,10 @@ try {
                 Paint bp= new Paint();
                 bp.setTextSize(17);
                 bp.setTypeface(Typeface.create(Typeface.DEFAULT_BOLD, Typeface.BOLD_ITALIC));
-                canvas.drawBitmap((isInAmbientMode())?batteryScaledBitmap_abc:batteryScaledBitmap,width-numberHourX1/2-batteryScaledBitmap_abc.getWidth(),blockStartY+blockScaledBitmap.getHeight(),null);
+                canvas.drawBitmap((!shouldTimerBeRunning())?batteryScaledBitmap_abc:batteryScaledBitmap,width-numberHourX1/2-batteryScaledBitmap_abc.getWidth(),blockStartY+blockScaledBitmap.getHeight(),null);
                 IntentFilter iFilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
                 Intent batteryStatus = getApplicationContext().registerReceiver(null, iFilter);
-                if(isInAmbientMode()){
+                if(!shouldTimerBeRunning()){
                     bp.setColor(getResources().getColor(R.color.gray_dark));
                 }
 
@@ -1069,7 +1279,7 @@ try {
 
 
 //            canvas.drawBitmap(isInAmbientMode() ? secondsBlockBitmapScalled_abc : secondsBlockBitmapScalled, secX, secY, null);
-            if (!isInAmbientMode()) {
+            if (shouldTimerBeRunning()) {
                 Paint secontPaint = new Paint();
                 secontPaint.setFakeBoldText(true);
                 secontPaint.setColor(getResources().getColor(R.color.dark_red));
@@ -1151,27 +1361,27 @@ try {
         public Bitmap getTimeBitmap(int number) {
             switch (number) {
                 case 0:
-                    return isInAmbientMode() ? scaledZero_amb_bitmap : scaledZero_bitmap;
+                    return !shouldTimerBeRunning() ? scaledZero_amb_bitmap : scaledZero_bitmap;
                 case 1:
-                    return isInAmbientMode() ? scaledOne_amb_bitmap : scaledOne_bitmap;
+                    return !shouldTimerBeRunning() ? scaledOne_amb_bitmap : scaledOne_bitmap;
                 case 2:
-                    return isInAmbientMode() ? scaledTwo_amb_bitmap : scaledTwo_bitmap;
+                    return !shouldTimerBeRunning() ? scaledTwo_amb_bitmap : scaledTwo_bitmap;
                 case 3:
-                    return isInAmbientMode() ? scaledThree_amb_bitmap : scaledThree_bitmap;
+                    return !shouldTimerBeRunning() ? scaledThree_amb_bitmap : scaledThree_bitmap;
                 case 4:
-                    return isInAmbientMode() ? scaledFour_amb_bitmap : scaledFour_bitmap;
+                    return !shouldTimerBeRunning() ? scaledFour_amb_bitmap : scaledFour_bitmap;
                 case 5:
-                    return isInAmbientMode() ? mScaledFive_amb_bitmap : scaledFive_bitmap;
+                    return !shouldTimerBeRunning() ? mScaledFive_amb_bitmap : scaledFive_bitmap;
                 case 6:
-                    return isInAmbientMode() ? scaledSix_amb_bitmap : scaledSix_bitmap;
+                    return !shouldTimerBeRunning() ? scaledSix_amb_bitmap : scaledSix_bitmap;
                 case 7:
-                    return isInAmbientMode() ? scaledSeven_amb_bitmap : scaledSeven_bitmap;
+                    return !shouldTimerBeRunning() ? scaledSeven_amb_bitmap : scaledSeven_bitmap;
                 case 8:
-                    return isInAmbientMode() ? scaledEight_amb_bitmap : scaledEight_bitmap;
+                    return !shouldTimerBeRunning() ? scaledEight_amb_bitmap : scaledEight_bitmap;
                 case 9:
-                    return isInAmbientMode() ? scaledNine_amb_bitmap : scaledNine_bitmap;
+                    return !shouldTimerBeRunning() ? scaledNine_amb_bitmap : scaledNine_bitmap;
                 default:
-                    if (isInAmbientMode())
+                    if (!shouldTimerBeRunning())
                         return scaledZero_amb_bitmap;
                     else
                         return scaledZero_bitmap;
@@ -1204,7 +1414,7 @@ try {
             invalidate();
             if (shouldTimerBeRunning()) {
                 long timeMs = System.currentTimeMillis();
-                long delayMs = 150;
+                long delayMs = 120;
                 mUpdateTimeHandler.sendEmptyMessageDelayed(MSG_UPDATE_TIME, delayMs);
             }
         }
