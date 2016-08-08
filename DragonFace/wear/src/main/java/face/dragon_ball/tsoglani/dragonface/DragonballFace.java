@@ -431,6 +431,8 @@ try {
             }
 //                    updateBrightness(255);
             if ((animationBitmaps == null) || !isLoaded) {
+                drawAnim(canvas,false);
+
                 return;
             }
 
