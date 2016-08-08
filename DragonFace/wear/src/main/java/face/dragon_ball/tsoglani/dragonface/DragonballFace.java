@@ -269,6 +269,10 @@ try {
             animationList.add(R.raw.nineteen);
             animationList.add(R.raw.twenty);
             animationList.add(R.raw.twentyone);
+            animationList.add(R.raw.twentythree);
+            animationList.add(R.raw.twentyfour);
+            animationList.add(R.raw.twentyfive);
+            animationList.add(R.raw.twentysix);
 //            animationList.add(R.raw.twentytwo);
 //            animationList.add(R.raw.twentythree);
 //            animationList.add(R.raw.twentyfour);
@@ -383,8 +387,10 @@ try {
             listOfAnimationImages.add( createTrimmedBitmap(getScaledBitmap3(BitmapFactory.decodeResource(getResources(), R.drawable.twenty))));
             listOfAnimationImages.add( createTrimmedBitmap(getScaledBitmap3(BitmapFactory.decodeResource(getResources(), R.drawable.twentyone))));
 
-
-
+            listOfAnimationImages.add( createTrimmedBitmap(getScaledBitmap3(BitmapFactory.decodeResource(getResources(), R.drawable.twentythree))));
+            listOfAnimationImages.add( createTrimmedBitmap(getScaledBitmap3(BitmapFactory.decodeResource(getResources(), R.drawable.twentyfour))));
+            listOfAnimationImages.add( createTrimmedBitmap(getScaledBitmap3(BitmapFactory.decodeResource(getResources(), R.drawable.twentyfive))));
+            listOfAnimationImages.add( createTrimmedBitmap(getScaledBitmap3(BitmapFactory.decodeResource(getResources(), R.drawable.twentysix))));
 
         }
         Bitmap getScaledBitmap3(Bitmap bitmap) {
