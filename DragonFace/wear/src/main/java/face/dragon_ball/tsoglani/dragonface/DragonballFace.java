@@ -273,23 +273,25 @@ try {
             animationList.add(R.raw.twentyfour);
             animationList.add(R.raw.twentyfive);
             animationList.add(R.raw.twentysix);
+
+
 //            animationList.add(R.raw.twentytwo);
 //            animationList.add(R.raw.twentythree);
 //            animationList.add(R.raw.twentyfour);
 //            animationList.add(R.raw.twentyfive);
 //            animationList.add(R.raw.twentysix);
-//            animationList.add(R.raw.twentyseven);
-//            animationList.add(R.raw.twentyeight);
-//            animationList.add(R.raw.twentynine);
-////            animationList.add(R.raw.thirty);
+            animationList.add(R.raw.twentyseven);
+            animationList.add(R.raw.twentyeight);
+            animationList.add(R.raw.twentynine);
+            animationList.add(R.raw.thirty);
 //
 //
 //
 //
-//            animationList.add(R.raw.thirtyone);
-//            animationList.add(R.raw.thirtytwo);
-//            animationList.add(R.raw.thirtythree);
-//            animationList.add(R.raw.thirtyfour);
+            animationList.add(R.raw.thirtyone);
+            animationList.add(R.raw.thirtytwo);
+            animationList.add(R.raw.thirtythree);
+            animationList.add(R.raw.thirtyfour);
 //            animationList.add(R.raw.thirtyfive);
 //            animationList.add(R.raw.thirtysix);
 //            animationList.add(R.raw.thirtyseven);
@@ -391,6 +393,19 @@ try {
             listOfAnimationImages.add( createTrimmedBitmap(getScaledBitmap3(BitmapFactory.decodeResource(getResources(), R.drawable.twentyfour))));
             listOfAnimationImages.add( createTrimmedBitmap(getScaledBitmap3(BitmapFactory.decodeResource(getResources(), R.drawable.twentyfive))));
             listOfAnimationImages.add( createTrimmedBitmap(getScaledBitmap3(BitmapFactory.decodeResource(getResources(), R.drawable.twentysix))));
+
+            listOfAnimationImages.add( createTrimmedBitmap(getScaledBitmap3(BitmapFactory.decodeResource(getResources(), R.drawable.twentyseven))));
+
+            listOfAnimationImages.add( createTrimmedBitmap(getScaledBitmap3(BitmapFactory.decodeResource(getResources(), R.drawable.twentyeight))));
+            listOfAnimationImages.add( createTrimmedBitmap(getScaledBitmap3(BitmapFactory.decodeResource(getResources(), R.drawable.twentynine))));
+            listOfAnimationImages.add( createTrimmedBitmap(getScaledBitmap3(BitmapFactory.decodeResource(getResources(), R.drawable.thirty))));
+            listOfAnimationImages.add( createTrimmedBitmap(getScaledBitmap3(BitmapFactory.decodeResource(getResources(), R.drawable.thirtyone))));
+            listOfAnimationImages.add( createTrimmedBitmap(getScaledBitmap3(BitmapFactory.decodeResource(getResources(), R.drawable.thirtytwo))));
+            listOfAnimationImages.add( createTrimmedBitmap(getScaledBitmap3(BitmapFactory.decodeResource(getResources(), R.drawable.thirtythree))));
+            listOfAnimationImages.add( createTrimmedBitmap(getScaledBitmap3(BitmapFactory.decodeResource(getResources(), R.drawable.thirtyfour))));
+
+
+
 
         }
         Bitmap getScaledBitmap3(Bitmap bitmap) {
@@ -745,6 +760,7 @@ try {
 
 
                     }
+                    resizedBitmap=null;
 
                     wakeUnlock();
                     if (shouldTimerBeRunning()){
