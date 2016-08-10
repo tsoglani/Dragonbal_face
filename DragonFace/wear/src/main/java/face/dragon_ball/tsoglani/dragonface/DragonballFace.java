@@ -764,12 +764,12 @@ try {
                     }
                     resizedBitmap=null;
 
-                    wakeUnlock();
+
                     if (shouldTimerBeRunning()){
                         isAnimationActivate=false;
                         fadeIn();}
 
-                    super.onPostExecute(aVoid);
+                    wakeUnlock();
                 }
             }.execute();
 //            new Thread() {
