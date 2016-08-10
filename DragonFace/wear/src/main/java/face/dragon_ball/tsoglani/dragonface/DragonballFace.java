@@ -366,7 +366,7 @@ try {
 
 //
 //
-
+            listOfAnimationImages.clear();
             listOfAnimationImages.add( createTrimmedBitmap(getScaledBitmap3(BitmapFactory.decodeResource(getResources(), R.drawable.one))));
             listOfAnimationImages.add( createTrimmedBitmap(getScaledBitmap3(BitmapFactory.decodeResource(getResources(), R.drawable.two))));
             listOfAnimationImages.add( createTrimmedBitmap(getScaledBitmap3(BitmapFactory.decodeResource(getResources(), R.drawable.three))));
@@ -767,9 +767,21 @@ try {
 
                     if (shouldTimerBeRunning()){
                         isAnimationActivate=false;
-                        fadeIn();}
+                        fadeIn();
+                    }
 
-                    wakeUnlock();
+
+                    new Thread(){
+                        @Override
+                        public void run() {
+                            try {
+                                sleep(1000);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                            wakeUnlock();
+                        }
+                    }.start();
                 }
             }.execute();
 //            new Thread() {
