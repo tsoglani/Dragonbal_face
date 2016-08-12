@@ -263,7 +263,7 @@ try {
             animationList.add(R.raw.ten);
             animationList.add(R.raw.eleven);
             animationList.add(R.raw.twelve);
-            animationList.add(R.raw.thirteen);
+//            animationList.add(R.raw.thirteen);
             animationList.add(R.raw.fourteen);
             animationList.add(R.raw.fifteen);
 
@@ -322,13 +322,29 @@ try {
 
         private void loadAnimation(final int id) {
             isLoaded = false;
+            if (animationNumber >= animationList.size()) {
+                animationNumber = 0;
+            }
+
+
             new Thread() {
                 @Override
                 public void run() {
+                    System.gc();
                     try {
+                        try{
+                            if (animationBitmaps != null){
+                                for (Bitmap b : animationBitmaps) {
+                                    b.recycle();
+                                }
+                                System.gc();}
+                        }catch (Exception e){
+                            e.printStackTrace();
+                        }
                         if (animationNumber  >= animationList.size()) {
                             animationNumber = 0;
                         }
+
                         myGif = GifFactory.decodeResource(getResources(), id);
 
                         myGif = Gif.createScaledGif(myGif, backgroundBitmap.getWidth(), backgroundBitmap.getHeight(), true);
@@ -337,15 +353,18 @@ try {
                             animationBitmaps[i]=myGif.getFrames()[i].getImage();
                         }
                         isLoaded = true;
+                        System.gc();
+
                     } catch (Exception | Error e) {
                         e.printStackTrace();
-                        Log.e("error on", "image " + animationNumber);
                         if (animationNumber + 1 >= animationList.size()) {
                             animationNumber = 0;
                         }
                         animationNumber++;
                         loadAnimation(animationList.get(animationNumber));
                     }
+
+
 
 
                 }
@@ -383,7 +402,7 @@ try {
             listOfAnimationImages.add( createTrimmedBitmap(getScaledBitmap3(BitmapFactory.decodeResource(getResources(), R.drawable.ten))));
             listOfAnimationImages.add( createTrimmedBitmap(getScaledBitmap3(BitmapFactory.decodeResource(getResources(), R.drawable.eleven))));
             listOfAnimationImages.add( createTrimmedBitmap(getScaledBitmap3(BitmapFactory.decodeResource(getResources(), R.drawable.twelve))));
-            listOfAnimationImages.add( createTrimmedBitmap(getScaledBitmap3(BitmapFactory.decodeResource(getResources(), R.drawable.thirteen))));
+//            listOfAnimationImages.add( createTrimmedBitmap(getScaledBitmap3(BitmapFactory.decodeResource(getResources(), R.drawable.thirteen))));
             listOfAnimationImages.add( createTrimmedBitmap(getScaledBitmap3(BitmapFactory.decodeResource(getResources(), R.drawable.fourteen))));
             listOfAnimationImages.add( createTrimmedBitmap(getScaledBitmap3(BitmapFactory.decodeResource(getResources(), R.drawable.fifteen))));
             listOfAnimationImages.add( createTrimmedBitmap(getScaledBitmap3(BitmapFactory.decodeResource(getResources(), R.drawable.sixteen))));
@@ -1343,6 +1362,8 @@ try {
                 }
             }
 
+
+
             Bitmap num1Bitmap = getTimeBitmap(timeTextOneByOne);
 
             numberHourX1 = blockStartX + blockScaledBitmap.getWidth() / 10-10;
@@ -1460,11 +1481,122 @@ try {
 //            else {
 //                animationCounter = 0;
 //            }
+
+            if(shouldTimerBeRunning()&&!isLoaded){
+
+                drawLoading(canvas,width,height);
+            }else if(loadingCounter!=0){
+                loadingCounter=0;
+            }
+
             previousIs24HourType=is24HourType;
             previousHour = tempHour;
             previousMinute = tempMinute;
         }
+        int loadingCounter=0;
+        private void drawLoading(Canvas canvas,int width,int height){
 
+            if(loadingCounter>16){
+                loadingCounter=0;
+            }
+            Bitmap bitmap=getScaledBitmap0(getLoading(loadingCounter));
+            if(bitmap!=null)
+                canvas.drawBitmap(bitmap,width/2-bitmap.getWidth()/2,height/2-bitmap.getHeight()/2,null);
+
+
+            loadingCounter++;
+
+        }
+        private Bitmap getLoading(int id ) {
+
+
+            switch (id) {
+                case 0:
+                    return BitmapFactory.decodeResource(getResources(), R.drawable.l1);
+                case 1:
+                    return BitmapFactory.decodeResource(getResources(), R.drawable.l2);
+                case 2:
+                    return BitmapFactory.decodeResource(getResources(), R.drawable.l3);
+                case 3:
+                    return BitmapFactory.decodeResource(getResources(), R.drawable.l4);
+                case 4:
+                    return BitmapFactory.decodeResource(getResources(), R.drawable.l5);
+                case 5:
+                    return BitmapFactory.decodeResource(getResources(), R.drawable.l6);
+                case 6:
+                    return BitmapFactory.decodeResource(getResources(), R.drawable.l7);
+                case 7:
+                    return BitmapFactory.decodeResource(getResources(), R.drawable.l8);
+                case 8:
+                    return  BitmapFactory.decodeResource(getResources(), R.drawable.l9);
+                case 9:
+                    return BitmapFactory.decodeResource(getResources(), R.drawable.l10);
+                case 10:
+                    return BitmapFactory.decodeResource(getResources(), R.drawable.l11);
+                case 11:
+                    return BitmapFactory.decodeResource(getResources(), R.drawable.l12);
+                case 12:
+                    return BitmapFactory.decodeResource(getResources(), R.drawable.l13);
+                case 13:
+                    return BitmapFactory.decodeResource(getResources(), R.drawable.l14);
+                case 14:
+                    return BitmapFactory.decodeResource(getResources(), R.drawable.l15);
+                case 15:
+                    return BitmapFactory.decodeResource(getResources(), R.drawable.l16);
+                case 16:
+                    return BitmapFactory.decodeResource(getResources(), R.drawable.l17);
+//                case 17:
+//                    return BitmapFactory.decodeResource(getResources(), R.drawable.l18);
+//                case 18:
+//                    return BitmapFactory.decodeResource(getResources(), R.drawable.l19);
+//                case 19:
+//                    return BitmapFactory.decodeResource(getResources(), R.drawable.l20);
+//                case 20:
+//                    return BitmapFactory.decodeResource(getResources(), R.drawable.l21);
+//                case 21:
+//                    return BitmapFactory.decodeResource(getResources(), R.drawable.l22);
+//                case 22:
+//                    return BitmapFactory.decodeResource(getResources(), R.drawable.l23);
+//                case 23:
+//                    return BitmapFactory.decodeResource(getResources(), R.drawable.l24);
+//                case 24:
+//                    return BitmapFactory.decodeResource(getResources(), R.drawable.l25);
+//                case 25:
+//                    return BitmapFactory.decodeResource(getResources(), R.drawable.l26);
+//                case 26:
+//                    return BitmapFactory.decodeResource(getResources(), R.drawable.l27);
+//                case 27:
+//                    return BitmapFactory.decodeResource(getResources(), R.drawable.l28);
+//                case 28:
+//                    return BitmapFactory.decodeResource(getResources(), R.drawable.l29);
+//                case 29:
+//                    return BitmapFactory.decodeResource(getResources(), R.drawable.l30);
+//                case 30:
+//                    return BitmapFactory.decodeResource(getResources(), R.drawable.l31);
+//                case 31:
+//                    return BitmapFactory.decodeResource(getResources(), R.drawable.l32);
+//                case 32:
+//                    return BitmapFactory.decodeResource(getResources(), R.drawable.l33);
+//                case 33:
+//                    return BitmapFactory.decodeResource(getResources(), R.drawable.l34);
+//                case 34:
+//                    return BitmapFactory.decodeResource(getResources(), R.drawable.l35);
+//
+
+
+                default:            return null;
+
+            }
+        }
+        Bitmap getScaledBitmap0(Bitmap bitmap) {
+
+            WindowManager window = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
+            Display display = window.getDefaultDisplay();
+            int width = display.getWidth()/5;
+            int height = display.getHeight()/5;
+
+            return Bitmap.createScaledBitmap(bitmap,width,height, true);
+        }
         public int convertToPx(int dp) {
             // Get the screen's density scale
             final float scale = getResources().getDisplayMetrics().density;
