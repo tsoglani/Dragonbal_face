@@ -6,7 +6,7 @@ android {
     buildToolsVersion "24.0.0"
 
     defaultConfig {
-        applicationId "face.dragon_ball.tsoglani.dragonface"
+        applicationId "face.dragon.tsoglanakos.ball"
         minSdkVersion 21
         targetSdkVersion 24
         versionCode 1

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="face.dragon_ball.tsoglani.dragonface">
+    package="face.dragon.tsoglanakos.ball">
 
     <uses-feature android:name="android.hardware.type.watch" />
     <!-- Required to act as a custom watch face. -->
@@ -14,7 +14,7 @@
         android:supportsRtl="true"
         android:theme="@android:style/Theme.DeviceDefault">
         <service
-            android:name=".DragonballFace"
+            android:name="face.dragon.tsoglanakos.ball.DragonballFace"
             android:label="@string/my_digital_name"
             android:permission="android.permission.BIND_WALLPAPER">
             <meta-data
@@ -49,7 +49,7 @@
             android:value="@integer/google_play_services_version" />
 
         <activity
-            android:name=".Settings"
+            android:name="face.dragon.tsoglanakos.ball.Settings"
             android:label="@string/title_activity_settings">
             <intent-filter>
                 <action android:name="com.example.android.wearable.watchface.CONFIG_DIGITAL" />

@@ -1,4 +1,4 @@
-package face.dragon_ball.tsoglani.dragonface;
+package face.dragon.tsoglanakos.ball;
 
 import org.junit.Test;
 
